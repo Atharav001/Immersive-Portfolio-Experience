@@ -1,48 +1,47 @@
-# Immersive Portfolio Experience (Wispr Flow Challenge)
+# Immersive Portfolio Experience — Atharav Narang
 
-An interactive portfolio experience created for the **Wispr Flow Challenge**. Designed to tell an authentic story through voice-driven ideas, high animations, and creative web craft.
+A creative developer portfolio experience created for the **Wispr Flow Challenge**, featuring exact physics-driven liquid text distortion, signature morphing navigation, and luxury contact architecture.
 
-## ✨ Features Built
+## ✨ Implemented Elements (Phase 2)
 
-- **Capsule Loader & Welcome Sequence (Optimized & Faster):**
-  - Interactive capsule pill with dynamic cursor-following spotlight (`#a87cff`).
-  - Snappy progress counter (`0%` to `100%`) with retro blinking terminal cursor box.
-  - Smooth collapse transition revealing uppercase **`WELCOME`**.
-  - Iris expansion animation opening seamlessly into the homepage.
-  - Retro bouncing ball widget and infinite moving typographic marquee.
-- **Top Navigation Header with Signature Hover Morph:**
-  - Rotating monogram emblem that spins 360° on hover.
-  - Sliding name mask: hovering smoothly shifts `"Atharav Narang"` to reveal `"• with passion"`.
-  - Live availability badge & voice pulse controller.
-- **Cursor-Reactive Magnetic Hero Typography:**
-  - Individual character physics engine calculating distance, angle, and magnetic displacement from cursor.
-  - Magnetic pull, 3D tilt, scale, and skew effects with smooth spring recovery.
-  - Background liquid radial spotlight reacting to user interaction.
-- **Voice Frequency Spectrum Visualizer:**
-  - Interactive multi-layered glowing canvas sinewaves reflecting audio frequency response.
+- **Snappy Capsule Loader:**
+  - Fast, accelerated loading sequence (~1.2s total) with retro blinking cursor.
+  - Smooth collapse transition into `"WELCOME"` and rapid iris-zoom reveal into the homepage.
+  - Retro bouncing ball widget and typographic moving marquee.
+- **Top Navigation Header (Signature Hover Morph):**
+  - Custom rotating geometric emblem (`transform: rotate(360deg)` on hover).
+  - Sliding name mask: hovering smoothly translates `"Atharav Narang"` to reveal `"• with ❤"` with exact cubic-bezier easing (`cubic-bezier(0.76, 0, 0.24, 1)`).
+  - Live availability badge (`AVAILABLE NOW FOR WORK`).
+  - Rolling text-swap navigation links (`Home`, `About`, `Contact`).
+  - Instant Replay Loader button.
+- **Monumental Hero Section (Cursor-Reactive Liquid Distortion):**
+  - Transparent outlined job title (`CREATIVE DEVELOPER`) with 1.5px white stroke.
+  - Monumental condensed bold typography (`ATHARAV NARANG`) with cursor-reactive liquid distortion physics.
+  - Real-time `FluidCanvas` calculating velocity, curl, swirl, and dissipation ripples as the cursor moves across the screen.
 - **Luxury Get In Touch / Contact Section:**
-  - Bottom-anchored card with glassmorphism, curved silhouette, and ambient top glow.
-  - Monumental call to action headline (`GET IN TOUCH`).
-  - Interactive email card with 1-click clipboard copy feedback.
-  - Social & portfolio links (GitHub, LinkedIn, Twitter/X, Wispr Flow Story).
+  - Curved silhouette card (`rounded-t-[36px] sm:rounded-t-[48px]`) with `backdrop-filter: blur(50px)` and ambient glow.
+  - Monogram avatar badge + outlined heading: `LET'S BUILD YOUR IDEA TOGETHER :)`.
+  - Interactive project / message inquiry form.
+  - Direct contact details with one-click clipboard copy for `atharavnarang@gmail.com`.
+  - Social media links (GitHub, LinkedIn, Twitter/X, Wispr Flow Story) with rolling text-swap hover animations.
 
 ## 🛠 Tech Stack
 
 - **Framework**: Vite + React
-- **Styling**: Tailwind CSS + Custom High-Performance Keyframes
+- **Styling**: Tailwind CSS + Custom CSS Keyframes & Cubic-Bezier Engine
+- **Motion & Fluid**: Real-Time Fluid Simulation Canvas + Character Vector Displacement
 - **Icons**: Lucide React
-- **Animation**: Physics-based proximity calculations, Canvas, and Framer Motion
-- **Deployability**: Portable and ready for Emergent, Vercel, Netlify, or GitHub Pages.
+- **Deployability**: 100% portable for Emergent, Vercel, Netlify, and GitHub Pages.
 
-## 🚀 Getting Started
+## 🚀 Running Locally
 
 ```bash
 # Install dependencies
 npm install
 
-# Start local development server
+# Start local dev server
 npm run dev
 
-# Build for production
+# Production build
 npm run build
 ```

@@ -17,16 +17,16 @@ export default function CapsuleLoader({ onFinish, brandTitle = "ATHARAV NARANG /
     wrapRef.current.style.setProperty('--mouse-y', `${y}px`);
   };
 
-  // Snappy, faster progressive loader (reaches 100% in ~800ms)
+  // Ultra-fast and snappy progressive loader (completes in ~600ms)
   useEffect(() => {
     let current = 0;
     const interval = setInterval(() => {
-      if (current < 40) {
-        current += Math.floor(Math.random() * 8) + 6;
-      } else if (current < 80) {
-        current += Math.floor(Math.random() * 6) + 5;
-      } else if (current < 98) {
-        current += Math.floor(Math.random() * 3) + 2;
+      if (current < 50) {
+        current += Math.floor(Math.random() * 12) + 10;
+      } else if (current < 90) {
+        current += Math.floor(Math.random() * 8) + 8;
+      } else if (current < 99) {
+        current += Math.floor(Math.random() * 4) + 3;
       } else {
         current = 100;
       }
@@ -36,20 +36,19 @@ export default function CapsuleLoader({ onFinish, brandTitle = "ATHARAV NARANG /
         setPercent(100);
         clearInterval(interval);
 
-        // Faster sequence after reaching 100%:
-        // 1. Reveal "Welcome" by collapsing loading container
+        // Fast transition into "Welcome"
         setTimeout(() => {
           setIsComplete(true);
 
-          // 2. Trigger rapid iris expansion into homepage
+          // Fast iris zoom expansion into homepage
           setTimeout(() => {
             triggerOpenHomepage();
-          }, 650);
-        }, 220);
+          }, 450);
+        }, 150);
       } else {
         setPercent(current);
       }
-    }, 22);
+    }, 16);
 
     return () => clearInterval(interval);
   }, []);
@@ -61,11 +60,11 @@ export default function CapsuleLoader({ onFinish, brandTitle = "ATHARAV NARANG /
       setIsExiting(true);
       setTimeout(() => {
         if (onFinish) onFinish();
-      }, 200);
-    }, 700);
+      }, 150);
+    }, 550);
   };
 
-  // Allow instant click to open if complete
+  // Allow instant click to open once complete
   const handleCapsuleClick = () => {
     if (isComplete && !isClicked) {
       triggerOpenHomepage();
@@ -73,7 +72,7 @@ export default function CapsuleLoader({ onFinish, brandTitle = "ATHARAV NARANG /
   };
 
   return (
-    <div className={`loading-screen ${isExiting ? 'opacity-0 pointer-events-none transition-opacity duration-200' : ''}`}>
+    <div className={`loading-screen ${isExiting ? 'opacity-0 pointer-events-none transition-opacity duration-150' : ''}`}>
       {/* Top Header with title and retro bouncing ball widget */}
       <div className="loading-header">
         <a href="#welcome" className="loader-title">
@@ -98,23 +97,23 @@ export default function CapsuleLoader({ onFinish, brandTitle = "ATHARAV NARANG /
       <div className="loading-marquee">
         <div className="loading-marquee-track">
           <span>ATHARAV NARANG</span>
-          <span>VOICE ARCHITECT</span>
-          <span>WISPR FLOW</span>
           <span>CREATIVE DEVELOPER</span>
+          <span>WISPR FLOW</span>
+          <span>VOICE ARCHITECT</span>
           <span>ATHARAV NARANG</span>
-          <span>VOICE ARCHITECT</span>
-          <span>WISPR FLOW</span>
           <span>CREATIVE DEVELOPER</span>
+          <span>WISPR FLOW</span>
+          <span>VOICE ARCHITECT</span>
         </div>
         <div className="loading-marquee-track" aria-hidden="true">
           <span>ATHARAV NARANG</span>
-          <span>VOICE ARCHITECT</span>
-          <span>WISPR FLOW</span>
           <span>CREATIVE DEVELOPER</span>
+          <span>WISPR FLOW</span>
+          <span>VOICE ARCHITECT</span>
           <span>ATHARAV NARANG</span>
-          <span>VOICE ARCHITECT</span>
-          <span>WISPR FLOW</span>
           <span>CREATIVE DEVELOPER</span>
+          <span>WISPR FLOW</span>
+          <span>VOICE ARCHITECT</span>
         </div>
       </div>
 

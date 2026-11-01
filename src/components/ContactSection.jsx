@@ -1,144 +1,218 @@
 import React, { useState } from 'react';
-import { Mail, ArrowUpRight, Copy, Check, MessageSquare, Sparkles } from 'lucide-react';
+import { ArrowUpRight, Copy, Check, Send } from 'lucide-react';
 
 export default function ContactSection({ email = "atharavnarang@gmail.com" }) {
   const [copied, setCopied] = useState(false);
+  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const handleCopyEmail = () => {
     navigator.clipboard.writeText(email);
     setCopied(true);
-    setTimeout(() => setCopied(false), 2200);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!formData.name || !formData.email) return;
+    setIsSubmitted(true);
+    setTimeout(() => {
+      setIsSubmitted(false);
+      setFormData({ name: '', email: '', message: '' });
+    }, 3500);
   };
 
   return (
-    <section id="contact" className="relative w-full mt-32 z-20">
-      {/* Top curved card with backdrop blur and ambient lighting */}
-      <div className="relative w-full max-w-7xl mx-auto rounded-t-[36px] sm:rounded-t-[54px] bg-gradient-to-b from-zinc-900/90 via-[#0e0f16]/95 to-[#08080c] border-t border-x border-white/10 backdrop-blur-2xl p-8 sm:p-14 lg:p-20 shadow-[0_-25px_60px_rgba(0,0,0,0.8)] overflow-hidden">
+    <footer id="contact" className="relative w-full mt-24 z-20">
+      {/* Top curved card with backdrop blur and subtle top glow border (Exact Yanne Sidibé style) */}
+      <div className="relative w-full rounded-t-[36px] sm:rounded-t-[48px] bg-[#0c0d12]/95 border-t border-x border-white/10 backdrop-blur-[50px] shadow-[0_-15px_50px_rgba(0,0,0,0.8)] px-6 sm:px-12 lg:px-20 pt-16 sm:pt-24 pb-12 overflow-hidden">
         
-        {/* Soft radial background glow */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-[#a87cff]/10 rounded-full blur-[140px] pointer-events-none" />
+        {/* Subtle background ambient glow */}
+        <div className="absolute top-0 right-1/4 w-[500px] h-[300px] bg-[#a87cff]/10 rounded-full blur-[140px] pointer-events-none" />
 
-        <div className="relative z-10 flex flex-col items-center text-center">
-          
-          {/* Eyebrow Status Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-zinc-800/60 border border-white/10 mb-8 backdrop-blur-md">
-            <Sparkles className="w-3.5 h-3.5 text-[#a87cff]" />
-            <span className="text-xs font-mono uppercase tracking-widest text-zinc-300">
-              Have a bold idea? Let's build it.
-            </span>
+        {/* Section Title Row: Avatar + Outlined Monumental Heading */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 sm:gap-8 pb-12 border-b border-white/10">
+          {/* Avatar Icon */}
+          <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-tr from-[#a87cff] via-indigo-600 to-purple-800 p-0.5 shrink-0 shadow-lg shadow-[#a87cff]/20">
+            <div className="w-full h-full rounded-full bg-[#141516] flex items-center justify-center font-august text-2xl sm:text-3xl font-bold text-white">
+              AN
+            </div>
           </div>
 
-          {/* Monumental Headline */}
-          <h2 className="text-[clamp(3.2rem,9.5vw,9rem)] font-black uppercase tracking-tight leading-[0.92] text-zinc-100 selection:bg-[#a87cff] selection:text-black transition-transform duration-500 hover:scale-[1.01]">
-            Get In <span className="bg-gradient-to-r from-[#a87cff] via-indigo-400 to-pink-400 bg-clip-text text-transparent">Touch</span>
+          {/* Outlined Monumental Title (Exact Yanne Sidibé style) */}
+          <h2 className="outlined-title font-august text-[clamp(2.5rem,7vw,6.5rem)] leading-none uppercase text-left tracking-[0.04em]">
+            Let's build your idea together :)
           </h2>
+        </div>
 
-          <p className="mt-6 text-base sm:text-xl text-zinc-400 max-w-xl mx-auto font-light leading-relaxed">
-            Ready to shape creative campaigns, launch voice-first products, or turn ambitious stories into interactive reality.
-          </p>
-
-          {/* Central Interactive Magnetic Email Card */}
-          <div className="mt-12 w-full max-w-2xl p-4 sm:p-6 rounded-3xl bg-zinc-950/80 border border-zinc-800/80 shadow-2xl flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-3.5 pl-2">
-              <div className="w-12 h-12 rounded-2xl bg-[#a87cff]/15 border border-[#a87cff]/30 flex items-center justify-center text-[#a87cff]">
-                <Mail className="w-6 h-6" />
+        {/* Two-Column Grid: Left Contact Form, Right Direct Details & Social Links */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 sm:gap-16 pt-12">
+          
+          {/* Column 1: Interactive Message / Project Form (7 cols) */}
+          <div className="lg:col-span-7">
+            <form onSubmit={handleSubmit} className="flex flex-col gap-8">
+              {/* Name Input */}
+              <div className="relative border-b border-white/15 focus-within:border-[#a87cff] transition-colors pb-3">
+                <label className="text-xs font-mono uppercase tracking-widest text-zinc-500 block mb-2">
+                  01 • What's your name?
+                </label>
+                <input
+                  type="text"
+                  required
+                  placeholder="John Doe *"
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  className="w-full bg-transparent text-lg sm:text-xl text-white placeholder-zinc-600 focus:outline-none font-sans"
+                />
               </div>
-              <div className="text-left">
-                <span className="text-[11px] font-mono text-zinc-400 uppercase tracking-wider block">Direct Email</span>
+
+              {/* Email Input */}
+              <div className="relative border-b border-white/15 focus-within:border-[#a87cff] transition-colors pb-3">
+                <label className="text-xs font-mono uppercase tracking-widest text-zinc-500 block mb-2">
+                  02 • What's your email?
+                </label>
+                <input
+                  type="email"
+                  required
+                  placeholder="john@example.com *"
+                  value={formData.email}
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  className="w-full bg-transparent text-lg sm:text-xl text-white placeholder-zinc-600 focus:outline-none font-sans"
+                />
+              </div>
+
+              {/* Message Input */}
+              <div className="relative border-b border-white/15 focus-within:border-[#a87cff] transition-colors pb-3">
+                <label className="text-xs font-mono uppercase tracking-widest text-zinc-500 block mb-2">
+                  03 • Tell me about your project or idea
+                </label>
+                <textarea
+                  rows={3}
+                  placeholder="Hello Atharav, I'd like to talk about..."
+                  value={formData.message}
+                  onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                  className="w-full bg-transparent text-lg sm:text-xl text-white placeholder-zinc-600 focus:outline-none font-sans resize-none"
+                />
+              </div>
+
+              {/* Send Button */}
+              <div>
+                <button
+                  type="submit"
+                  disabled={isSubmitted}
+                  className="group relative inline-flex items-center gap-3 px-8 py-4 rounded-full bg-[#f0f1fa] text-[#0a0a0a] font-semibold text-sm hover:bg-white transition-all shadow-xl hover:shadow-[#a87cff]/20 active:scale-95 cursor-pointer"
+                >
+                  {isSubmitted ? (
+                    <>
+                      <Check className="w-4 h-4 text-emerald-600" />
+                      <span>Message Sent Successfully!</span>
+                    </>
+                  ) : (
+                    <>
+                      <span>Send Message</span>
+                      <Send className="w-4 h-4 group-hover:translate-x-1 group-hover:-translate-y-0.5 transition-transform" />
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
+          </div>
+
+          {/* Column 2: Direct Contact & Social Links (5 cols) */}
+          <div className="lg:col-span-5 flex flex-col justify-between gap-10">
+            {/* Contact Details */}
+            <div className="flex flex-col gap-3">
+              <span className="text-xs font-mono uppercase tracking-widest text-[#9BA2AF]">
+                Contact Details
+              </span>
+
+              <div className="mt-2 flex items-center gap-3">
                 <a
                   href={`mailto:${email}`}
-                  className="text-base sm:text-lg font-mono font-medium text-white hover:text-[#a87cff] transition-colors"
+                  className="rolling-link text-lg sm:text-xl font-medium text-[#f0f1fa]"
+                  data-replace={email}
                 >
-                  {email}
+                  <span>{email}</span>
+                </a>
+
+                <button
+                  onClick={handleCopyEmail}
+                  className="p-2 rounded-full bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-white border border-white/10 transition-colors"
+                  title="Copy email to clipboard"
+                >
+                  {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                </button>
+              </div>
+
+              <p className="text-sm font-sans text-zinc-400 mt-1">
+                Based in India • Available Worldwide
+              </p>
+            </div>
+
+            {/* Social Media Links with Exact Rolling Hover Effect */}
+            <div className="flex flex-col gap-3">
+              <span className="text-xs font-mono uppercase tracking-widest text-[#9BA2AF]">
+                Social Media
+              </span>
+
+              <div className="mt-2 flex flex-col items-start gap-3 text-base sm:text-lg">
+                <a
+                  href="https://github.com/Atharav001"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="rolling-link"
+                  data-replace="GitHub"
+                >
+                  <span>GitHub</span>
+                </a>
+
+                <a
+                  href="https://linkedin.com"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="rolling-link"
+                  data-replace="LinkedIn"
+                >
+                  <span>LinkedIn</span>
+                </a>
+
+                <a
+                  href="https://x.com"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="rolling-link"
+                  data-replace="Twitter / X"
+                >
+                  <span>Twitter / X</span>
+                </a>
+
+                <a
+                  href="https://wisprflow.ai"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="rolling-link text-[#a87cff]"
+                  data-replace="Wispr Flow Story"
+                >
+                  <span>Wispr Flow Story</span>
                 </a>
               </div>
             </div>
 
-            <div className="flex items-center gap-2 w-full sm:w-auto">
-              <button
-                onClick={handleCopyEmail}
-                className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-3 rounded-2xl bg-zinc-900 hover:bg-zinc-800 text-xs font-mono font-medium text-zinc-200 border border-zinc-700/60 transition-all active:scale-95"
-                title="Copy email address"
-              >
-                {copied ? (
-                  <>
-                    <Check className="w-4 h-4 text-emerald-400" />
-                    <span className="text-emerald-400">Copied!</span>
-                  </>
-                ) : (
-                  <>
-                    <Copy className="w-4 h-4 text-zinc-400" />
-                    <span>Copy</span>
-                  </>
-                )}
-              </button>
-
-              <a
-                href={`mailto:${email}`}
-                className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-3 rounded-2xl bg-[#a87cff] hover:bg-[#b994ff] text-black font-semibold text-xs transition-all shadow-lg shadow-[#a87cff]/20 active:scale-95"
-              >
-                <span>Write Now</span>
-                <ArrowUpRight className="w-4 h-4" />
-              </a>
-            </div>
-          </div>
-
-          {/* Social Links Row */}
-          <div className="mt-12 flex flex-wrap justify-center items-center gap-3 sm:gap-6 text-xs sm:text-sm font-mono">
-            <a
-              href="https://github.com/Atharav001"
-              target="_blank"
-              rel="noreferrer"
-              className="px-4 py-2 rounded-full bg-zinc-900/60 border border-zinc-800 text-zinc-400 hover:text-white hover:border-[#a87cff]/50 transition-colors flex items-center gap-1.5"
-            >
-              <span>GitHub</span>
-              <ArrowUpRight className="w-3.5 h-3.5 opacity-60" />
-            </a>
-
-            <a
-              href="https://linkedin.com"
-              target="_blank"
-              rel="noreferrer"
-              className="px-4 py-2 rounded-full bg-zinc-900/60 border border-zinc-800 text-zinc-400 hover:text-white hover:border-indigo-500/50 transition-colors flex items-center gap-1.5"
-            >
-              <span>LinkedIn</span>
-              <ArrowUpRight className="w-3.5 h-3.5 opacity-60" />
-            </a>
-
-            <a
-              href="https://x.com"
-              target="_blank"
-              rel="noreferrer"
-              className="px-4 py-2 rounded-full bg-zinc-900/60 border border-zinc-800 text-zinc-400 hover:text-white hover:border-pink-500/50 transition-colors flex items-center gap-1.5"
-            >
-              <span>Twitter / X</span>
-              <ArrowUpRight className="w-3.5 h-3.5 opacity-60" />
-            </a>
-
-            <a
-              href="https://wisprflow.ai"
-              target="_blank"
-              rel="noreferrer"
-              className="px-4 py-2 rounded-full bg-zinc-900/60 border border-zinc-800 text-zinc-400 hover:text-[#a87cff] hover:border-[#a87cff]/50 transition-colors flex items-center gap-1.5"
-            >
-              <MessageSquare className="w-3.5 h-3.5 text-[#a87cff]" />
-              <span>Wispr Flow Story</span>
-            </a>
-          </div>
-
-          {/* Clean Bottom Copyright & Credentials */}
-          <div className="mt-16 pt-8 w-full border-t border-white/5 flex flex-col sm:flex-row items-center justify-between text-xs font-mono text-zinc-500 gap-4">
-            <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-              <span>Available for campaigns & engineering roles</span>
-            </div>
-            <div>
-              © {new Date().getFullYear()} Atharav Narang • Built with Voice
+            {/* Availability Note */}
+            <div className="pt-4 border-t border-white/10 text-xs font-mono text-zinc-400 flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-[#219653] animate-pulse" />
+              <span>Available for freelance & full-time roles</span>
             </div>
           </div>
 
         </div>
+
+        {/* Bottom Footer Bar */}
+        <div className="mt-20 pt-8 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-zinc-500">
+          <p>© {new Date().getFullYear()} ATHARAV NARANG</p>
+          <p>BUILT FOR WISPR FLOW CHALLENGE • VOICE FIRST</p>
+        </div>
       </div>
-    </section>
+    </footer>
   );
 }

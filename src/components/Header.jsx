@@ -1,101 +1,70 @@
 import React from 'react';
-import { RotateCcw, ArrowUpRight, Volume2, Mic } from 'lucide-react';
+import { RotateCcw } from 'lucide-react';
 
-export default function Header({
-  onReplayLoader,
-  isVoiceActive,
-  onToggleVoice,
-  firstName = "Atharav",
-  lastName = "Narang",
-  hoverMessage = "• with passion"
-}) {
+export default function Header({ onReplayLoader }) {
   return (
-    <header className="fixed top-0 left-0 w-full z-40 backdrop-blur-md bg-[#090a0f]/75 border-b border-white/5 transition-all duration-300">
-      <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-        
-        {/* Top-Left Signature Name & Hover Morph */}
-        <a
-          href="#home"
-          aria-label={`${firstName} ${lastName}`}
-          className="group flex items-center gap-3 select-none cursor-pointer text-white"
-        >
-          {/* Rotating Monogram Emblem */}
-          <div className="relative w-8 h-8 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center text-xs font-mono font-bold text-[#a87cff] shadow-inner overflow-hidden transition-transform duration-700 ease-[cubic-bezier(0.76,0,0.24,1)] group-hover:rotate-[360deg] group-hover:border-[#a87cff]/40">
-            <span className="relative z-10">AN</span>
-            <div className="absolute inset-0 bg-gradient-to-tr from-[#a87cff]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-          </div>
+    <header className="fixed top-0 left-0 w-full z-40 h-20 px-6 sm:px-10 flex items-center justify-between backdrop-blur-md bg-[#0a0a0a]/60 border-b border-white/5 transition-all">
+      {/* 1. Top-Left Logo with Exact Yanne Sidibé Hover Animation */}
+      <a href="#home" className="logo-link group flex items-center select-none" aria-label="Atharav Narang">
+        {/* Rotating Geometric Emblem */}
+        <div className="logo-emblem w-7 h-7 flex items-center justify-center transition-transform duration-700 ease-[cubic-bezier(0.76,0,0.24,1)]">
+          <svg width="24" height="26" viewBox="0 0 34 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+              fillRule="evenodd"
+              clipRule="evenodd"
+              d="M17 3.96C17 1.77295 15.3256 0 13.26 0H3.74C1.67446 0 0 1.77295 0 3.96V14.1695C0 16.3565 1.67446 18.1294 3.74 18.1294H13.26C15.3256 18.1294 17 19.9024 17 22.0894V32.04C17 34.227 18.6745 36 20.74 36H30.26C32.3255 36 34 34.227 34 32.04V21.8304C34 19.6434 32.3255 17.8705 30.26 17.8705H20.74C18.6745 17.8705 17 16.0975 17 13.9105V3.96Z"
+              fill="#F0F1FA"
+            />
+          </svg>
+        </div>
 
-          {/* Sliding Name Mask */}
-          <div className="relative flex items-center h-7 overflow-hidden text-sm sm:text-base font-semibold tracking-tight">
-            {/* First Name (slides left on hover) */}
-            <span className="inline-block transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] group-hover:-translate-x-[115%]">
-              {firstName}
-            </span>
+        {/* Sliding Name Mask Container */}
+        <div className="name-container ml-2.5 flex items-center h-6 overflow-hidden text-sm sm:text-base font-semibold tracking-tight text-[#f0f1fa]">
+          <p className="first-name transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)]">
+            Atharav
+          </p>
+          <p className="last-name pl-1.5 transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)]">
+            Narang
+          </p>
+          <p className="msg-name absolute left-[120px] flex items-center gap-1.5 pl-1.5 transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] text-[#a87cff]">
+            <span>•</span>
+            <span>with</span>
+            <span>❤</span>
+          </p>
+        </div>
+      </a>
 
-            {/* Last Name (shifts left into first name's spot) */}
-            <span className="inline-block pl-1.5 transition-transform duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] group-hover:-translate-x-[64px] text-zinc-300 group-hover:text-white">
-              {lastName}
-            </span>
+      {/* 2. Center Availability Status Pill */}
+      <div className="hidden md:flex items-center gap-2.5 px-3.5 py-1.5 rounded-full border border-[#219653]/40 bg-[#219653]/15 text-xs font-medium text-[#f0f1fa]">
+        <span className="text-[11px] uppercase tracking-wider text-zinc-300">available now for work</span>
+        <span className="relative flex h-2 w-2">
+          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#219653] opacity-75"></span>
+          <span className="relative inline-flex rounded-full h-2 w-2 bg-[#219653]"></span>
+        </span>
+      </div>
 
-            {/* Hidden Message / Easter Egg (slides in from right) */}
-            <span className="absolute left-[135px] whitespace-nowrap pl-2 text-xs font-mono text-[#a87cff] opacity-0 group-hover:opacity-100 transition-all duration-500 ease-[cubic-bezier(0.76,0,0.24,1)] group-hover:-translate-x-[72px]">
-              {hoverMessage}
-            </span>
-          </div>
+      {/* 3. Right Navigation with Exact Rolling Text-Swap Hover Links */}
+      <nav className="flex items-center gap-6 sm:gap-8 text-sm font-medium">
+        <a href="#home" className="rolling-link" data-replace="Home">
+          <span>Home</span>
+        </a>
+        <a href="#about" className="rolling-link" data-replace="About">
+          <span>About</span>
+        </a>
+        <a href="#contact" className="rolling-link" data-replace="Contact">
+          <span>Contact</span>
         </a>
 
-        {/* Center: Live Availability Badge */}
-        <div className="hidden md:inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-950/40 border border-emerald-500/30 text-[11px] font-mono text-emerald-400">
-          <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-          </span>
-          <span>AVAILABLE FOR PROJECTS</span>
-        </div>
-
-        {/* Right Action Tools */}
-        <div className="flex items-center gap-3">
-          {/* Voice Frequency Toggle */}
-          <button
-            onClick={onToggleVoice}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-zinc-900/90 border border-zinc-800 text-xs font-mono text-zinc-300 hover:text-white hover:border-[#a87cff]/40 transition-colors"
-            title={isVoiceActive ? "Mute Voice Visualizer" : "Activate Voice Visualizer"}
-          >
-            {isVoiceActive ? (
-              <>
-                <Volume2 className="w-3.5 h-3.5 text-[#a87cff]" />
-                <span className="hidden sm:inline">Voice Pulse: On</span>
-              </>
-            ) : (
-              <>
-                <Mic className="w-3.5 h-3.5 text-zinc-500" />
-                <span className="hidden sm:inline">Voice Pulse: Off</span>
-              </>
-            )}
-          </button>
-
-          {/* Replay Capsule Loader */}
-          <button
-            onClick={onReplayLoader}
-            className="group flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-zinc-900 border border-zinc-800 text-xs font-medium text-zinc-300 hover:text-white hover:border-[#a87cff]/50 transition-all hover:shadow-[0_0_20px_rgba(168,124,255,0.2)]"
-            title="Replay Capsule Loading Sequence"
-          >
-            <RotateCcw className="w-3.5 h-3.5 text-[#a87cff] group-hover:-rotate-90 transition-transform duration-300" />
-            <span className="hidden sm:inline">Replay Loader</span>
-          </button>
-
-          {/* Wispr Flow Link */}
-          <a
-            href="https://wisprflow.ai"
-            target="_blank"
-            rel="noreferrer"
-            className="flex items-center gap-1 px-3.5 py-1.5 rounded-full bg-white text-black text-xs font-semibold hover:bg-zinc-200 transition-colors shadow-sm"
-          >
-            <span>Wispr</span>
-            <ArrowUpRight className="w-3.5 h-3.5" />
-          </a>
-        </div>
-      </div>
+        {/* Fast Replay Capsule Loader button */}
+        <button
+          onClick={onReplayLoader}
+          className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-zinc-900 border border-zinc-800 text-xs text-zinc-300 hover:text-white hover:border-[#a87cff]/50 transition-colors"
+          title="Replay fast capsule loader"
+        >
+          <RotateCcw className="w-3 h-3 text-[#a87cff]" />
+          <span className="hidden sm:inline">Loader</span>
+        </button>
+      </nav>
     </header>
   );
 }

@@ -7,15 +7,23 @@ export default {
   theme: {
     extend: {
       fontFamily: {
+        august: ['Bebas Neue', 'Anton', 'Impact', 'sans-serif'],
+        syne: ['Syne', 'sans-serif'],
         sans: ['Geist', 'Inter', 'sans-serif'],
         mono: ['JetBrains Mono', 'monospace'],
       },
       colors: {
         canvas: '#eae5ec',
+        dark: {
+          DEFAULT: '#0a0a0a',
+          card: '#141516',
+          border: 'rgba(255, 255, 255, 0.1)',
+        },
         brand: {
           purple: '#a87cff',
-          flow: '#6366f1',
-          accent: '#8b5cf6',
+          deep: '#321469',
+          light: '#f0f1fa',
+          green: '#219653',
         }
       }
     },
