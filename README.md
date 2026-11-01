@@ -2,28 +2,37 @@
 
 An interactive portfolio experience created for the **Wispr Flow Challenge**. Designed to tell an authentic story through voice-driven ideas, high animations, and creative web craft.
 
-## ✨ Features Built (Phase 1)
+## ✨ Features Built
 
-- **Exact Replica of the Redoyanul Haque Capsule Loader:**
-  - Interactive pill/capsule container with dynamic cursor-following purple radial spotlight (`#a87cff`).
-  - Smooth loading percentage count (`0%` to `100%`) with retro blinking terminal cursor box.
-  - Collapse transition: at 100%, the loading counter collapses down to 0 width, smoothly revealing the uppercase **`WELCOME`** greeting.
-  - Iris Zoom Reveal: triggers an expansive `min-width: calc(100vw + 5000px); min-height: calc(100vh + 500px); border-radius: 5000px;` animation with smooth cubic-bezier easing (`cubic-bezier(.33, .11, .15, 1)`) that opens into the homepage.
-  - Retro Header Widget: animated jumping ball that bounces rhythmically over obstacle lines.
-  - Typographic Marquee: infinite moving background ticker running behind the loader.
-  - Quick Replay Button: test or watch the capsule sequence anytime without hard-refreshing.
-- **Story Architecture (Wispr Flow Brief):**
-  - Voice Frequency Wave Visualizer reflecting audio input.
-  - Four Core Story Pillars: *The Chances I Took*, *The Mistakes I Learned From*, *What I Care About*, *How I Think*.
-  - Flexible modular architecture ready for additional interactive 3D/video elements.
+- **Capsule Loader & Welcome Sequence (Optimized & Faster):**
+  - Interactive capsule pill with dynamic cursor-following spotlight (`#a87cff`).
+  - Snappy progress counter (`0%` to `100%`) with retro blinking terminal cursor box.
+  - Smooth collapse transition revealing uppercase **`WELCOME`**.
+  - Iris expansion animation opening seamlessly into the homepage.
+  - Retro bouncing ball widget and infinite moving typographic marquee.
+- **Top Navigation Header with Signature Hover Morph:**
+  - Rotating monogram emblem that spins 360° on hover.
+  - Sliding name mask: hovering smoothly shifts `"Atharav Narang"` to reveal `"• with passion"`.
+  - Live availability badge & voice pulse controller.
+- **Cursor-Reactive Magnetic Hero Typography:**
+  - Individual character physics engine calculating distance, angle, and magnetic displacement from cursor.
+  - Magnetic pull, 3D tilt, scale, and skew effects with smooth spring recovery.
+  - Background liquid radial spotlight reacting to user interaction.
+- **Voice Frequency Spectrum Visualizer:**
+  - Interactive multi-layered glowing canvas sinewaves reflecting audio frequency response.
+- **Luxury Get In Touch / Contact Section:**
+  - Bottom-anchored card with glassmorphism, curved silhouette, and ambient top glow.
+  - Monumental call to action headline (`GET IN TOUCH`).
+  - Interactive email card with 1-click clipboard copy feedback.
+  - Social & portfolio links (GitHub, LinkedIn, Twitter/X, Wispr Flow Story).
 
 ## 🛠 Tech Stack
 
 - **Framework**: Vite + React
-- **Styling**: Tailwind CSS + Custom High-Performance Keyframe Engine
+- **Styling**: Tailwind CSS + Custom High-Performance Keyframes
 - **Icons**: Lucide React
-- **Animation Capabilities**: Framer Motion, Canvas, ready for Three.js / WebGL / Spline
-- **Deployability**: 100% portable, works seamlessly with Emergent, Vercel, Netlify, and GitHub Pages.
+- **Animation**: Physics-based proximity calculations, Canvas, and Framer Motion
+- **Deployability**: Portable and ready for Emergent, Vercel, Netlify, or GitHub Pages.
 
 ## 🚀 Getting Started
 

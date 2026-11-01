@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-export default function CapsuleLoader({ onFinish, brandTitle = "WISPR FLOW / PORTFOLIO" }) {
+export default function CapsuleLoader({ onFinish, brandTitle = "ATHARAV NARANG / WISPR FLOW" }) {
   const [percent, setPercent] = useState(0);
   const [isComplete, setIsComplete] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
@@ -17,20 +17,18 @@ export default function CapsuleLoader({ onFinish, brandTitle = "WISPR FLOW / POR
     wrapRef.current.style.setProperty('--mouse-y', `${y}px`);
   };
 
-  // Progressive simulated loader (0 to 100%)
+  // Snappy, faster progressive loader (reaches 100% in ~800ms)
   useEffect(() => {
     let current = 0;
     const interval = setInterval(() => {
-      // Fast start, natural easing near 90%, then smooth finish to 100%
-      if (current < 45) {
-        current += Math.floor(Math.random() * 6) + 3;
-      } else if (current < 85) {
-        current += Math.floor(Math.random() * 4) + 2;
-      } else if (current < 99) {
-        current += 1;
+      if (current < 40) {
+        current += Math.floor(Math.random() * 8) + 6;
+      } else if (current < 80) {
+        current += Math.floor(Math.random() * 6) + 5;
+      } else if (current < 98) {
+        current += Math.floor(Math.random() * 3) + 2;
       } else {
         current = 100;
-        clearInterval(interval);
       }
 
       if (current >= 100) {
@@ -38,20 +36,20 @@ export default function CapsuleLoader({ onFinish, brandTitle = "WISPR FLOW / POR
         setPercent(100);
         clearInterval(interval);
 
-        // Sequence after reaching 100%:
-        // 1. Reveal "Welcome" by collapsing loading-container
+        // Faster sequence after reaching 100%:
+        // 1. Reveal "Welcome" by collapsing loading container
         setTimeout(() => {
           setIsComplete(true);
 
-          // 2. Trigger expansion into homepage
+          // 2. Trigger rapid iris expansion into homepage
           setTimeout(() => {
             triggerOpenHomepage();
-          }, 1100);
-        }, 500);
+          }, 650);
+        }, 220);
       } else {
         setPercent(current);
       }
-    }, 45);
+    }, 22);
 
     return () => clearInterval(interval);
   }, []);
@@ -63,8 +61,8 @@ export default function CapsuleLoader({ onFinish, brandTitle = "WISPR FLOW / POR
       setIsExiting(true);
       setTimeout(() => {
         if (onFinish) onFinish();
-      }, 300);
-    }, 950);
+      }, 200);
+    }, 700);
   };
 
   // Allow instant click to open if complete
@@ -75,7 +73,7 @@ export default function CapsuleLoader({ onFinish, brandTitle = "WISPR FLOW / POR
   };
 
   return (
-    <div className={`loading-screen ${isExiting ? 'opacity-0 pointer-events-none transition-opacity duration-300' : ''}`}>
+    <div className={`loading-screen ${isExiting ? 'opacity-0 pointer-events-none transition-opacity duration-200' : ''}`}>
       {/* Top Header with title and retro bouncing ball widget */}
       <div className="loading-header">
         <a href="#welcome" className="loader-title">
@@ -99,24 +97,24 @@ export default function CapsuleLoader({ onFinish, brandTitle = "WISPR FLOW / POR
       {/* Moving Background Marquee */}
       <div className="loading-marquee">
         <div className="loading-marquee-track">
-          <span>WISPR FLOW</span>
+          <span>ATHARAV NARANG</span>
           <span>VOICE ARCHITECT</span>
-          <span>CREATIVE CAMPAIGNS</span>
-          <span>STORYTELLER</span>
           <span>WISPR FLOW</span>
+          <span>CREATIVE DEVELOPER</span>
+          <span>ATHARAV NARANG</span>
           <span>VOICE ARCHITECT</span>
-          <span>CREATIVE CAMPAIGNS</span>
-          <span>STORYTELLER</span>
+          <span>WISPR FLOW</span>
+          <span>CREATIVE DEVELOPER</span>
         </div>
         <div className="loading-marquee-track" aria-hidden="true">
-          <span>WISPR FLOW</span>
+          <span>ATHARAV NARANG</span>
           <span>VOICE ARCHITECT</span>
-          <span>CREATIVE CAMPAIGNS</span>
-          <span>STORYTELLER</span>
           <span>WISPR FLOW</span>
+          <span>CREATIVE DEVELOPER</span>
+          <span>ATHARAV NARANG</span>
           <span>VOICE ARCHITECT</span>
-          <span>CREATIVE CAMPAIGNS</span>
-          <span>STORYTELLER</span>
+          <span>WISPR FLOW</span>
+          <span>CREATIVE DEVELOPER</span>
         </div>
       </div>
 
