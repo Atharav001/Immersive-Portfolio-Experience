@@ -96,24 +96,24 @@ export default function CapsuleLoader({ onFinish, brandTitle = "ATHARAV NARANG /
       {/* Moving Background Marquee */}
       <div className="loading-marquee">
         <div className="loading-marquee-track">
-          <span>ATHARAV NARANG</span>
+          <span>YANNE SIDIBÉ</span>
           <span>CREATIVE DEVELOPER</span>
-          <span>WISPR FLOW</span>
-          <span>VOICE ARCHITECT</span>
-          <span>ATHARAV NARANG</span>
+          <span>AEROSPACE & DESIGN</span>
+          <span>HUMAN FACTORS</span>
+          <span>YANNE SIDIBÉ</span>
           <span>CREATIVE DEVELOPER</span>
-          <span>WISPR FLOW</span>
-          <span>VOICE ARCHITECT</span>
+          <span>AEROSPACE & DESIGN</span>
+          <span>HUMAN FACTORS</span>
         </div>
         <div className="loading-marquee-track" aria-hidden="true">
-          <span>ATHARAV NARANG</span>
+          <span>YANNE SIDIBÉ</span>
           <span>CREATIVE DEVELOPER</span>
-          <span>WISPR FLOW</span>
-          <span>VOICE ARCHITECT</span>
-          <span>ATHARAV NARANG</span>
+          <span>AEROSPACE & DESIGN</span>
+          <span>HUMAN FACTORS</span>
+          <span>YANNE SIDIBÉ</span>
           <span>CREATIVE DEVELOPER</span>
-          <span>WISPR FLOW</span>
-          <span>VOICE ARCHITECT</span>
+          <span>AEROSPACE & DESIGN</span>
+          <span>HUMAN FACTORS</span>
         </div>
       </div>
 

@@ -8,6 +8,7 @@ export default {
     extend: {
       fontFamily: {
         august: ['August', 'sans-serif'],
+        clash: ['ClashDisplay', 'sans-serif'],
         sans: ['Geist', 'Inter', 'sans-serif'],
         mono: ['JetBrains Mono', 'monospace'],
       },

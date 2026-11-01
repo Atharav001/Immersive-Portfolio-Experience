@@ -1,7 +1,24 @@
 @font-face {
   font-family: 'August';
-  src: url('/fonts/August-Bold.woff') format('woff');
+  src: url('/fonts/August-Bold.woff') format('woff'),
+       url('/fonts/August_Bold-s.p.1ck0a0r7_bho9.woff2') format('woff2');
   font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'ClashDisplay';
+  src: url('/fonts/ClashDisplay_Bold-s.p.2nvxwaktzfxv_.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'ClashDisplay';
+  src: url('/fonts/ClashDisplay_Regular-s.p.2qbs-i2c-ky9j.woff2') format('woff2');
+  font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
@@ -483,12 +500,24 @@ body { background: #050505; }
   border-radius: 30px; background: #ffffff08; backdrop-filter: blur(14px);
 }
 .hero-availability i { width: 7px; height: 7px; border-radius: 50%; background: #b4f16b; box-shadow: 0 0 12px #b4f16b; }
-.hero-name { font-size: clamp(4.5rem, 17vw, 16.8rem); }
-.hero-name-wrap { perspective: 1000px; }
-.hero-name span:not(.inline-block.w-\[3vw\]) { transition: color .35s ease, filter .35s ease; }
-.hero-name span:not(.inline-block.w-\[3vw\]):hover {
-  color: #fff; filter: drop-shadow(0 0 16px #b9a4ff66);
+.hero-filter-defs { position: absolute; width: 0; height: 0; overflow: hidden; }
+.hero-name-wrap { perspective: 1000px; width: 100%; overflow: visible; }
+.hero-name {
+  display: flex; align-items: center; justify-content: center; gap: .08em;
+  width: 100%; max-width: 100%; margin: 0; white-space: nowrap; text-align: center;
+  color: #f8f7fa; font-size: clamp(3rem, 13vw, 32rem); line-height: .82;
+  letter-spacing: -.055em; font-weight: 700;
+  transform: scaleX(.94); transform-origin: center;
 }
+.hero-word { display: inline-flex; white-space: nowrap; }
+.hero-name .hero-word > span {
+  display: inline-block; color: #f8f7fa; transform-origin: 50% 65%;
+  transition: color .3s ease, filter .3s ease;
+}
+.hero-name .hero-word > span:hover {
+  color: #fff; filter: drop-shadow(0 2px 10px #b9a4ff55);
+}
+.hero-name:hover { filter: url(#hero-liquid); }
 .india-rule { display: flex; width: 62px; height: 4px; overflow: hidden; border-radius: 5px; }
 .india-rule span { flex: 1; }
 .india-rule span:nth-child(1) { background: #ff9933; }
@@ -516,8 +545,7 @@ body { background: #050505; }
 @media (max-width: 700px) {
   .honors-tab { width: 39px; height: 104px; }
   .hero-availability { top: 105px; }
-  .hero-name { font-size: clamp(3rem, 15.5vw, 7rem); }
-  .hero-name-wrap { overflow: visible; }
+  .hero-name { font-size: clamp(2.2rem, 12vw, 5.6rem); gap: .08em; transform: scaleX(.96); }
   .contact-panel { border-radius: 26px 26px 0 0; }
   .contact-meta-grid { grid-template-columns: repeat(2, minmax(0,1fr)); gap: 32px 22px; }
   .contact-bottom { flex-wrap: wrap; }

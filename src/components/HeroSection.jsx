@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from 'react';
-import ThreeCanvas from './ThreeCanvas';
+import { PORTFOLIO_DATA } from '../data/portfolioData';
 
 /**
  * Character that smoothly avoids the cursor using 60fps spring/lerp physics
@@ -81,7 +81,7 @@ function AvoidanceCharacter({ char, mouseRef }) {
   }, [mouseRef]);
 
   if (char === ' ') {
-    return <span className="inline-block w-[3vw] sm:w-[4vw]" />;
+    return <span className="inline-block w-[2.5vw] sm:w-[3.5vw]" />;
   }
 
   return (
@@ -95,9 +95,9 @@ function AvoidanceCharacter({ char, mouseRef }) {
 }
 
 export default function HeroSection({
-  firstName = "ATHARAV",
-  lastName = "NARANG",
-  jobTitle = "CREATIVE DEVELOPER"
+  firstName = PORTFOLIO_DATA.firstname,
+  lastName = PORTFOLIO_DATA.lastname,
+  jobTitle = PORTFOLIO_DATA.jobTitle
 }) {
   const containerRef = useRef(null);
   const mouseRef = useRef({ x: null, y: null });
@@ -110,6 +110,10 @@ export default function HeroSection({
     mouseRef.current = { x: null, y: null };
   };
 
+  const chars = (text, key) => text.split('').map((char, index) => (
+    <AvoidanceCharacter key={`${key}-${index}`} char={char} mouseRef={mouseRef} />
+  ));
+
   return (
     <section
       ref={containerRef}
@@ -117,72 +121,70 @@ export default function HeroSection({
       onMouseLeave={handleMouseLeave}
       className="relative w-full min-h-screen flex flex-col justify-between items-center px-4 sm:px-8 pt-28 pb-12 overflow-hidden z-10"
     >
-      {/* 3D Glossy Liquid Torus Knot in the Center (Exact yannesidibe.com centerpiece) */}
-      <ThreeCanvas />
+      {/* SVG Liquid Filter */}
+      <svg className="hero-filter-defs" aria-hidden="true" focusable="false">
+        <filter id="hero-liquid" x="-8%" y="-18%" width="116%" height="136%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.012 0.035" numOctaves="2" seed="4" result="noise">
+            <animate attributeName="baseFrequency" values="0.012 0.035;0.024 0.065;0.012 0.035" dur="2.2s" repeatCount="indefinite" />
+          </feTurbulence>
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="0" xChannelSelector="R" yChannelSelector="G">
+            <animate attributeName="scale" values="0;24;14;0" dur="1.15s" repeatCount="indefinite" />
+          </feDisplacementMap>
+        </filter>
+      </svg>
 
-      {/* Top Space / Subtitle: CREATIVE DEVELOPER (Exact Yanne Sidibé style) */}
-      <div className="w-full flex flex-col items-center justify-center pt-2 z-20">
-        <h2
-          className="font-august text-[clamp(2.5rem,5.5vw,5.5rem)] uppercase tracking-[0.05em] leading-none text-transparent"
-          style={{ WebkitTextStroke: '1.5px #ffffff' }}
-        >
-          {jobTitle || "CREATIVE DEVELOPER"}
-        </h2>
+      {/* 1. Availability Pill */}
+      <div className="hero-availability" aria-label="Available now for work">
+        <span>{PORTFOLIO_DATA.availability}</span>
+        <i />
       </div>
 
-      {/* Giant Hero Name on Single Horizontal Line with 3D Knot Between Words */}
-      <div className="hero-name-wrap relative w-full flex items-center justify-center z-20 my-auto py-4 select-none">
-        <div className="hero-name font-august uppercase tracking-[-0.015em] leading-[0.82] flex items-center justify-center text-center whitespace-nowrap">
-          {/* First Name (ATHARAV) */}
-          <div className="inline-flex">
-            {firstName.split('').map((char, index) => (
-              <AvoidanceCharacter
-                key={`first-${index}`}
-                char={char}
-                mouseRef={mouseRef}
-              />
-            ))}
-          </div>
+      {/* 2. Center Hero: Outlined Job Title + Massive Display Name */}
+      <div className="my-auto w-full flex flex-col items-center justify-center z-20 py-8 select-none">
+        
+        {/* Outlined Job Title from Yanne Sidibé */}
+        <div className="mb-2 sm:mb-4">
+          <p className="font-august text-transparent [-webkit-text-stroke:1.5px_#f0f1fa] sm:[-webkit-text-stroke:2px_#f0f1fa] uppercase tracking-wider text-xl sm:text-3xl md:text-5xl text-center">
+            {jobTitle.toUpperCase()}
+          </p>
+        </div>
 
-          {/* Spacer in middle for 3D Torus Knot */}
-          <div className="w-[4vw] sm:w-[6vw] shrink-0" />
-
-          {/* Last Name (NARANG) */}
-          <div className="inline-flex">
-            {lastName.split('').map((char, index) => (
-              <AvoidanceCharacter
-                key={`last-${index}`}
-                char={char}
-                mouseRef={mouseRef}
-              />
-            ))}
-          </div>
+        {/* Condensed, massive display name with liquid hover */}
+        <div className="hero-name-wrap relative w-full flex items-center justify-center py-2 select-none">
+          <h1 className="hero-name font-august uppercase" aria-label={`${firstName} ${lastName}`}>
+            <span className="hero-word">{chars(firstName, 'first')}</span>
+            <span className="inline-block w-[2vw]" />
+            <span className="hero-word">{chars(lastName, 'last')}</span>
+          </h1>
         </div>
       </div>
 
-      {/* Bottom Area: Location + Flag Pill + Scroll Down Indicator */}
+      {/* 3. Location and scroll cue */}
       <div className="flex flex-col items-center gap-5 z-20 pb-4">
-        {/* LOCATED IN INDIA */}
+        {/* LOCATED IN FRANCE / GLOBAL */}
         <div className="flex flex-col items-center gap-2">
           <p className="font-sans text-xs sm:text-sm font-semibold tracking-[0.28em] text-white uppercase">
-            LOCATED IN INDIA
+            LOCATED IN {PORTFOLIO_DATA.location}
           </p>
 
-          {/* India Tricolor Pill Bar */}
-          <div className="india-rule shadow-[0_0_15px_rgba(255,153,51,0.3)]">
-            <span />
-            <span />
-            <span />
+          {/* Authentic Tricolor Pill Bar (Blue, White, Red) */}
+          <div className="flex w-16 h-1.5 overflow-hidden rounded-full shadow-[0_0_12px_rgba(255,255,255,0.2)]">
+            <span className="flex-1 bg-[#0055A4]" />
+            <span className="flex-1 bg-[#FFFFFF]" />
+            <span className="flex-1 bg-[#EF4135]" />
           </div>
         </div>
 
         {/* Scroll Down To Explore */}
-        <div className="flex flex-col items-center gap-1.5 mt-2 opacity-80 hover:opacity-100 transition-opacity cursor-pointer">
-          <span className="text-[11px] font-sans tracking-wider text-zinc-300">
+        <a
+          href="#about"
+          className="flex flex-col items-center gap-1.5 mt-2 opacity-80 hover:opacity-100 transition-opacity cursor-pointer group"
+        >
+          <span className="text-[11px] font-sans tracking-wider text-zinc-300 group-hover:text-white">
             Scroll down to explore
           </span>
-          <span className="hero-scroll-arrow">↓</span>
-        </div>
+          <span className="hero-scroll-arrow text-zinc-300 group-hover:text-white">↓</span>
+        </a>
       </div>
     </section>
   );
