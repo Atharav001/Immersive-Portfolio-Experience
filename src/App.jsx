@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import CapsuleLoader from './components/CapsuleLoader';
 import Header from './components/Header';
 import HeroSection from './components/HeroSection';
-import FluidCanvas from './components/FluidCanvas';
 import ContactSection from './components/ContactSection';
 
 export default function App() {
@@ -15,7 +14,7 @@ export default function App() {
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-[#f0f1fa] font-sans selection:bg-[#a87cff] selection:text-black relative flex flex-col justify-between overflow-x-hidden">
       
-      {/* 1. Fast Capsule Loader */}
+      {/* 1. Fast Capsule Loader (Snappy ~1.2s sequence) */}
       {showLoader && (
         <CapsuleLoader
           brandTitle="ATHARAV NARANG / WISPR FLOW"
@@ -23,13 +22,10 @@ export default function App() {
         />
       )}
 
-      {/* 2. Real-Time Fluid Distortion Canvas */}
-      <FluidCanvas />
-
-      {/* 3. Header with Exact Top-Left Name Hover Morph & Rolling Nav Links */}
+      {/* 2. Top Header with Signature Hover Morph, Availability Badge & Honors Sidebar */}
       <Header onReplayLoader={replayLoader} />
 
-      {/* 4. Exact Hero Section (Outlined Title + Monumental Liquid Distorted Name) */}
+      {/* 3. Exact Hero Section (Outlined Title, 3D Liquid Torus Knot, Monumental Avoidance Name, Flag Pill) */}
       <main id="home" className="relative z-10 w-full flex-1 flex flex-col justify-center items-center">
         <HeroSection
           firstName="ATHARAV"
@@ -38,7 +34,7 @@ export default function App() {
         />
       </main>
 
-      {/* 5. Exact Contact Section (Curved Card + Outlined Title + Form + Rolling Links) */}
+      {/* 4. Exact Contact Section (Curved Card + Outlined Title + Form + Rolling Social Links) */}
       <ContactSection email="atharavnarang@gmail.com" />
 
     </div>

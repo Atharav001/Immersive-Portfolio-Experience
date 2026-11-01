@@ -1,3 +1,11 @@
+@font-face {
+  font-family: 'August';
+  src: url('/fonts/August-Bold.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -356,7 +364,7 @@
   -webkit-text-stroke: 1.5px #f0f1fa;
 }
 
-/* Top-Left Name Hover Morph */
+/* Top-Left Name Hover Morph (Exact Yanne Sidibé cubic-bezier transition) */
 .logo-link {
   cursor: pointer;
   display: flex;
@@ -365,7 +373,7 @@
 }
 
 .logo-link .logo-emblem {
-  transition: transform 0.6s cubic-bezier(0.76, 0, 0.24, 1);
+  transition: transform 0.7s cubic-bezier(0.76, 0, 0.24, 1);
 }
 
 .logo-link:hover .logo-emblem {
@@ -392,6 +400,7 @@
 
 .logo-link:hover .name-container .first-name {
   transform: translate(-100%);
+  opacity: 0;
 }
 
 .logo-link:hover .name-container .last-name {
@@ -400,6 +409,7 @@
 
 .logo-link:hover .name-container .msg-name {
   transform: translate(-60px);
+  opacity: 1;
 }
 
 /* Rolling Text-Swap Hover Links (Awwwards Style) */

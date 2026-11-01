@@ -1,65 +1,93 @@
-import React, { useRef, useState, useEffect, useCallback } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
+import ThreeCanvas from './ThreeCanvas';
 
-function LiquidCharacter({ char, mousePos, mouseVelocity }) {
+/**
+ * Character that smoothly avoids the cursor using 60fps spring/lerp physics
+ */
+function AvoidanceCharacter({ char, mouseRef, containerRectRef }) {
   const spanRef = useRef(null);
-  const [transform, setTransform] = useState({ x: 0, y: 0, scaleX: 1, scaleY: 1, rotate: 0, skew: 0 });
-  const [isNear, setIsNear] = useState(false);
+  const stateRef = useRef({
+    currentX: 0,
+    currentY: 0,
+    currentRotate: 0,
+    currentScale: 1,
+    currentSkew: 0,
+    targetX: 0,
+    targetY: 0,
+    targetRotate: 0,
+    targetScale: 1,
+    targetSkew: 0,
+  });
 
   useEffect(() => {
-    if (!spanRef.current || mousePos.x === null || mousePos.y === null) return;
+    let animId;
 
-    const rect = spanRef.current.getBoundingClientRect();
-    const charCenterX = rect.left + rect.width / 2;
-    const charCenterY = rect.top + rect.height / 2;
+    const updatePhysics = () => {
+      const span = spanRef.current;
+      const mouse = mouseRef.current;
 
-    const dx = mousePos.x - charCenterX;
-    const dy = mousePos.y - charCenterY;
-    const dist = Math.sqrt(dx * dx + dy * dy);
-    const radius = 220; // Radius of liquid distortion field
+      if (span && mouse.x !== null && mouse.y !== null) {
+        const rect = span.getBoundingClientRect();
+        const charCenterX = rect.left + rect.width / 2;
+        const charCenterY = rect.top + rect.height / 2;
 
-    if (dist < radius) {
-      const factor = Math.pow((radius - dist) / radius, 2);
-      // Liquid push away combined with velocity momentum
-      const forceX = -(dx / dist) * factor * 45 + (mouseVelocity.vx || 0) * 0.4;
-      const forceY = -(dy / dist) * factor * 55 + (mouseVelocity.vy || 0) * 0.4;
-      const rotate = (dx / radius) * 25 * factor;
-      const skew = -(dx / radius) * 20 * factor;
-      const scaleX = 1 + factor * 0.22;
-      const scaleY = 1 - factor * 0.12;
+        const dx = mouse.x - charCenterX;
+        const dy = mouse.y - charCenterY;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        const radius = 240; // Proximity field
 
-      setTransform({
-        x: forceX,
-        y: forceY,
-        scaleX,
-        scaleY,
-        rotate,
-        skew,
-      });
-      setIsNear(true);
-    } else {
-      if (isNear) {
-        setTransform({ x: 0, y: 0, scaleX: 1, scaleY: 1, rotate: 0, skew: 0 });
-        setIsNear(false);
+        if (dist < radius && dist > 0) {
+          // Repulsion force: smoothly pushes character away from cursor
+          const power = Math.pow((radius - dist) / radius, 1.6);
+          const pushDistance = 45; // Max push in px
+
+          stateRef.current.targetX = -(dx / dist) * power * pushDistance;
+          stateRef.current.targetY = -(dy / dist) * power * pushDistance;
+          stateRef.current.targetRotate = -(dx / radius) * 20 * power;
+          stateRef.current.targetSkew = -(dx / radius) * 16 * power;
+          stateRef.current.targetScale = 1 + power * 0.12;
+        } else {
+          stateRef.current.targetX = 0;
+          stateRef.current.targetY = 0;
+          stateRef.current.targetRotate = 0;
+          stateRef.current.targetSkew = 0;
+          stateRef.current.targetScale = 1;
+        }
+      } else {
+        stateRef.current.targetX = 0;
+        stateRef.current.targetY = 0;
+        stateRef.current.targetRotate = 0;
+        stateRef.current.targetSkew = 0;
+        stateRef.current.targetScale = 1;
       }
-    }
-  }, [mousePos, mouseVelocity, isNear]);
+
+      // Smooth buttery lerp damping (high-frame-rate spring physics)
+      const s = stateRef.current;
+      s.currentX += (s.targetX - s.currentX) * 0.12;
+      s.currentY += (s.targetY - s.currentY) * 0.12;
+      s.currentRotate += (s.targetRotate - s.currentRotate) * 0.1;
+      s.currentSkew += (s.targetSkew - s.currentSkew) * 0.1;
+      s.currentScale += (s.targetScale - s.currentScale) * 0.1;
+
+      if (span) {
+        span.style.transform = `translate3d(${s.currentX}px, ${s.currentY}px, 0) rotate(${s.currentRotate}deg) skewX(${s.currentSkew}deg) scale(${s.currentScale})`;
+      }
+
+      animId = requestAnimationFrame(updatePhysics);
+    };
+
+    animId = requestAnimationFrame(updatePhysics);
+    return () => cancelAnimationFrame(animId);
+  }, [mouseRef]);
 
   if (char === ' ') {
-    return <span className="inline-block w-[3vw]" />;
+    return <span className="inline-block w-[3vw] sm:w-[4vw]" />;
   }
 
   return (
     <span
       ref={spanRef}
-      style={{
-        transform: `translate3d(${transform.x}px, ${transform.y}px, 0) rotate(${transform.rotate}deg) skewX(${transform.skew}deg) scale(${transform.scaleX}, ${transform.scaleY})`,
-        transition: isNear ? 'transform 0.08s ease-out' : 'transform 0.65s cubic-bezier(0.16, 1, 0.3, 1)',
-      }}
-      className={`inline-block select-none will-change-transform transition-all duration-300 ${
-        isNear
-          ? 'text-white drop-shadow-[0_0_35px_rgba(168,124,255,0.9)] scale-[1.03]'
-          : 'text-[#f0f1fa]'
-      }`}
+      className="inline-block select-none will-change-transform text-white transition-colors duration-200"
     >
       {char}
     </span>
@@ -72,84 +100,90 @@ export default function HeroSection({
   jobTitle = "CREATIVE DEVELOPER"
 }) {
   const containerRef = useRef(null);
-  const [mousePos, setMousePos] = useState({ x: null, y: null });
-  const [mouseVelocity, setMouseVelocity] = useState({ vx: 0, vy: 0 });
-  const lastPosRef = useRef({ x: 0, y: 0, time: Date.now() });
+  const mouseRef = useRef({ x: null, y: null });
 
-  const handleMouseMove = useCallback((e) => {
-    const now = Date.now();
-    const dt = Math.max(now - lastPosRef.current.time, 16);
-    const vx = (e.clientX - lastPosRef.current.x) / (dt / 16);
-    const vy = (e.clientY - lastPosRef.current.y) / (dt / 16);
+  const handleMouseMove = (e) => {
+    mouseRef.current = { x: e.clientX, y: e.clientY };
+  };
 
-    lastPosRef.current = { x: e.clientX, y: e.clientY, time: now };
-    setMousePos({ x: e.clientX, y: e.clientY });
-    setMouseVelocity({ vx, vy });
-  }, []);
-
-  const handleMouseLeave = useCallback(() => {
-    setMousePos({ x: null, y: null });
-    setMouseVelocity({ vx: 0, vy: 0 });
-  }, []);
+  const handleMouseLeave = () => {
+    mouseRef.current = { x: null, y: null };
+  };
 
   return (
     <section
       ref={containerRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="relative w-full min-h-[92vh] flex flex-col justify-center items-center px-4 sm:px-6 pt-28 pb-16 overflow-hidden z-10"
+      className="relative w-full min-h-screen flex flex-col justify-between items-center px-4 sm:px-8 pt-28 pb-12 overflow-hidden z-10"
     >
-      {/* 1. Outlined Job Title (Exact Yanne Sidibé style: transparent fill with 1.5px white stroke) */}
-      <div className="w-full text-center mb-2 sm:mb-4">
-        <h2 className="outlined-title font-august text-[clamp(2.2rem,5vw,5rem)] tracking-[0.06em] leading-none uppercase">
+      {/* 3D Glossy Liquid Torus Knot in the Center (Exact yannesidibe.com centerpiece) */}
+      <ThreeCanvas />
+
+      {/* Top Space / Subtitle */}
+      <div className="w-full flex flex-col items-center justify-center pt-4 z-20">
+        <h2 className="font-august text-[clamp(2.5rem,5.5vw,5.5rem)] uppercase tracking-[0.05em] leading-none text-transparent stroke-white" style={{ WebkitTextStroke: '1.5px #ffffff' }}>
           {jobTitle}
         </h2>
       </div>
 
-      {/* 2. Monumental Hero Name (Exact Yanne Sidibé style: August typography with cursor-reactive liquid distortion) */}
-      <div className="w-full flex flex-col items-center justify-center font-august uppercase leading-[0.85] text-center select-none">
-        
-        {/* Line 1: First Name */}
-        <div className="flex justify-center items-center text-[clamp(4.5rem,19vw,17rem)] tracking-[-0.03em]">
-          {firstName.split('').map((char, index) => (
-            <LiquidCharacter
-              key={`first-${index}`}
-              char={char}
-              mousePos={mousePos}
-              mouseVelocity={mouseVelocity}
-            />
-          ))}
-        </div>
+      {/* Giant Hero Name on Single Horizontal Line with 3D Knot Between Words */}
+      <div className="relative w-full flex items-center justify-center z-20 my-auto py-4 select-none">
+        <div className="font-august text-[clamp(4.2rem,17vw,17.5rem)] uppercase tracking-[-0.015em] leading-[0.82] flex items-center justify-center text-center whitespace-nowrap">
+          {/* First Name (ATHARAV) */}
+          <div className="inline-flex">
+            {firstName.split('').map((char, index) => (
+              <AvoidanceCharacter
+                key={`first-${index}`}
+                char={char}
+                mouseRef={mouseRef}
+              />
+            ))}
+          </div>
 
-        {/* Line 2: Last Name */}
-        <div className="flex justify-center items-center text-[clamp(4.5rem,19vw,17rem)] tracking-[-0.03em] -mt-[1vw] sm:-mt-[2vw]">
-          {lastName.split('').map((char, index) => (
-            <LiquidCharacter
-              key={`last-${index}`}
-              char={char}
-              mousePos={mousePos}
-              mouseVelocity={mouseVelocity}
-            />
-          ))}
-        </div>
-      </div>
+          {/* Spacer in middle for 3D Torus Knot */}
+          <div className="w-[4vw] sm:w-[6vw] shrink-0" />
 
-      {/* 3. Subtext Description & Interactive Indicator */}
-      <div className="mt-8 sm:mt-12 max-w-xl text-center px-4">
-        <p className="text-sm sm:text-base font-light text-zinc-400 leading-relaxed font-sans">
-          Crafting visually striking web experiences with creative interaction, high-fidelity motion, and voice-driven architecture for the Wispr Flow challenge.
-        </p>
-
-        <div className="mt-6 inline-flex items-center gap-3 text-xs font-mono uppercase tracking-widest text-zinc-500">
-          <span className="w-2 h-2 rounded-full bg-[#a87cff] animate-ping" />
-          <span>Interactive Fluid Canvas • Move cursor over text</span>
+          {/* Last Name (NARANG) */}
+          <div className="inline-flex">
+            {lastName.split('').map((char, index) => (
+              <AvoidanceCharacter
+                key={`last-${index}`}
+                char={char}
+                mouseRef={mouseRef}
+              />
+            ))}
+          </div>
         </div>
       </div>
 
-      {/* Scroll Down Indicator */}
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-50 hover:opacity-100 transition-opacity">
-        <span className="text-[10px] font-mono tracking-widest uppercase text-zinc-400">Scroll</span>
-        <div className="w-[1px] h-8 bg-gradient-to-b from-white to-transparent animate-pulse" />
+      {/* Bottom Area: Location + Flag Pill + Scroll Down Indicator */}
+      <div className="flex flex-col items-center gap-5 z-20 pb-4">
+        {/* LOCATED IN INDIA */}
+        <div className="flex flex-col items-center gap-2">
+          <p className="font-sans text-xs sm:text-sm font-semibold tracking-[0.28em] text-white uppercase">
+            LOCATED IN INDIA
+          </p>
+
+          {/* India Tricolor Pill Bar */}
+          <div className="w-24 h-2 rounded-full overflow-hidden flex shadow-[0_0_15px_rgba(255,153,51,0.3)]">
+            <div className="flex-1 bg-[#FF9933]" />
+            <div className="flex-1 bg-white relative flex items-center justify-center">
+              <span className="w-1 h-1 rounded-full bg-[#000080]" />
+            </div>
+            <div className="flex-1 bg-[#138808]" />
+          </div>
+        </div>
+
+        {/* Scroll Down To Explore */}
+        <div className="flex flex-col items-center gap-1.5 mt-2 opacity-80 hover:opacity-100 transition-opacity cursor-pointer">
+          <span className="text-[11px] font-sans tracking-wider text-zinc-300">
+            Scroll down to explore
+          </span>
+          <span className="text-sm text-zinc-300 animate-bounce">
+            ↓
+          </span>
+        </div>
       </div>
     </section>
   );

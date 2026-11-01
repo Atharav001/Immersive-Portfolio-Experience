@@ -7,8 +7,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        august: ['Bebas Neue', 'Anton', 'Impact', 'sans-serif'],
-        syne: ['Syne', 'sans-serif'],
+        august: ['August', 'sans-serif'],
         sans: ['Geist', 'Inter', 'sans-serif'],
         mono: ['JetBrains Mono', 'monospace'],
       },
@@ -21,7 +20,7 @@ export default {
         },
         brand: {
           purple: '#a87cff',
-          deep: '#321469',
+          deep: '#121469',
           light: '#f0f1fa',
           green: '#219653',
         }
