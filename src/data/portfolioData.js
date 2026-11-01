@@ -1,18 +1,20 @@
 // Portfolio data extracted directly from yannesidibe.com site package
 
 export const PORTFOLIO_DATA = {
-  firstname: "Yanne",
-  lastname: "Sidibé",
-  jobTitle: "Creative Developer",
-  availability: "available now for work",
+  firstname: "Atharav",
+  lastname: "Narang",
+  jobTitle: "Computer Science",
+  role: "Computer Science",
+  city: "Bengaluru",
+  availability: "Available for work",
   about: "An award-winning, product-minded frontend engineer with a background in aerospace engineering and human factors. I design and build visually striking web and mobile products where usability, reliability and performance matter—from concept to launch, with a strong focus on thoughtful UX, engaging interactions and practical AI-powered workflows.",
-  email: "yannesidibe.pro@gmail.com",
+  email: "atharavnarang@gmail.com",
   picture: "/media/pic.png",
   audio: "/media/generic1.mp3",
   droneVideo: "/media/drone.mp4",
   year: "2026",
   version: "2.0.0 © 2026",
-  location: "FRANCE",
+  location: "India",
   
   services: [
     {
@@ -153,15 +155,11 @@ export const PORTFOLIO_DATA = {
   socials: [
     {
       name: "LinkedIn",
-      url: "https://www.linkedin.com/in/yanne-s-0a6a60b8"
+      url: "https://www.linkedin.com/"
     },
     {
-      name: "Threads",
-      url: "https://www.threads.net/@yanne_sidibe"
-    },
-    {
-      name: "Awwwards",
-      url: "https://www.awwwards.com/yannesidibe"
+      name: "Twitter / X",
+      url: "https://x.com/"
     },
     {
       name: "GitHub",
