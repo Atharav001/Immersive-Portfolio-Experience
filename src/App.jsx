@@ -25,12 +25,12 @@ export default function App() {
       {/* 2. Top Header with Signature Hover Morph, Availability Badge & Honors Sidebar */}
       <Header onReplayLoader={replayLoader} />
 
-      {/* 3. Exact Hero Section (Outlined Title, 3D Liquid Torus Knot, Monumental Avoidance Name, Flag Pill) */}
+      {/* Home hero: animated name, availability and India location */}
       <main id="home" className="relative z-10 w-full flex-1 flex flex-col justify-center items-center">
         <HeroSection
           firstName="ATHARAV"
           lastName="NARANG"
-          jobTitle="CREATIVE DEVELOPER"
+          jobTitle=""
         />
       </main>
 

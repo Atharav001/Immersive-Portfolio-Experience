@@ -6,22 +6,8 @@ export default function Header({ onReplayLoader }) {
 
   return (
     <>
-      {/* 1. Left Edge Fixed Awards & Honors Tab (Exact yannesidibe.com sidebar) */}
-      <div className="fixed left-0 top-1/2 -translate-y-1/2 z-30 hidden md:flex flex-col items-center bg-white text-[#141516] rounded-r-xl py-3 px-1.5 shadow-2xl border-y border-r border-white/20 select-none">
-        {/* CSSDA Logo */}
-        <div className="w-6 h-6 rounded-full border border-zinc-300 flex items-center justify-center text-[8px] font-bold mb-2">
-          ★
-        </div>
-
-        {/* Awwwards W. Logo */}
-        <div className="font-serif font-black text-xs leading-none mb-3">
-          W.
-        </div>
-
-        {/* Vertical "Honors" text */}
-        <div className="text-[10px] font-medium tracking-widest [writing-mode:vertical-rl] rotate-180 text-zinc-700 py-1">
-          Honors
-        </div>
+      <div className="honors-tab">
+        <span>Honors</span>
       </div>
 
       {/* 2. Top Header Navigation Bar */}
@@ -54,12 +40,6 @@ export default function Header({ onReplayLoader }) {
           </div>
         </a>
 
-        {/* Center Pill: "available now for work 🟢" (Exact screenshot design) */}
-        <div className="pointer-events-auto hidden md:flex items-center gap-2.5 px-4 py-1.5 rounded-2xl border-2 border-[#219653] bg-[#219653]/20 backdrop-blur-md text-xs font-semibold text-[#f0f1fa] shadow-[0_0_20px_rgba(33,150,83,0.2)]">
-          <span className="tracking-wide text-zinc-200">available now for work</span>
-          <span className="w-2.5 h-2.5 rounded-full bg-[#219653] shadow-[0_0_8px_#219653]" />
-        </div>
-
         {/* Right Section: Sound Toggle & Stacked Right Navigation */}
         <div className="pointer-events-auto flex items-start gap-8 sm:gap-12 text-xs sm:text-sm font-medium">
           {/* Sound Toggle (Exact "Sound | OFF" / "Sound | ON") */}
@@ -91,15 +71,6 @@ export default function Header({ onReplayLoader }) {
               <span>Contact</span>
             </a>
 
-            {/* Quick Replay Loader */}
-            <button
-              onClick={onReplayLoader}
-              className="mt-2 text-[10px] font-mono text-zinc-500 hover:text-[#a87cff] flex items-center gap-1 transition-colors cursor-pointer"
-              title="Test fast capsule loader"
-            >
-              <RotateCcw className="w-3 h-3" />
-              <span>Replay</span>
-            </button>
           </nav>
         </div>
 

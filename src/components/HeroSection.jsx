@@ -1,10 +1,10 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
 import ThreeCanvas from './ThreeCanvas';
 
 /**
  * Character that smoothly avoids the cursor using 60fps spring/lerp physics
  */
-function AvoidanceCharacter({ char, mouseRef, containerRectRef }) {
+function AvoidanceCharacter({ char, mouseRef }) {
   const spanRef = useRef(null);
   const stateRef = useRef({
     currentX: 0,
@@ -120,16 +120,19 @@ export default function HeroSection({
       {/* 3D Glossy Liquid Torus Knot in the Center (Exact yannesidibe.com centerpiece) */}
       <ThreeCanvas />
 
-      {/* Top Space / Subtitle */}
-      <div className="w-full flex flex-col items-center justify-center pt-4 z-20">
-        <h2 className="font-august text-[clamp(2.5rem,5.5vw,5.5rem)] uppercase tracking-[0.05em] leading-none text-transparent stroke-white" style={{ WebkitTextStroke: '1.5px #ffffff' }}>
-          {jobTitle}
+      {/* Top Space / Subtitle: CREATIVE DEVELOPER (Exact Yanne Sidibé style) */}
+      <div className="w-full flex flex-col items-center justify-center pt-2 z-20">
+        <h2
+          className="font-august text-[clamp(2.5rem,5.5vw,5.5rem)] uppercase tracking-[0.05em] leading-none text-transparent"
+          style={{ WebkitTextStroke: '1.5px #ffffff' }}
+        >
+          {jobTitle || "CREATIVE DEVELOPER"}
         </h2>
       </div>
 
       {/* Giant Hero Name on Single Horizontal Line with 3D Knot Between Words */}
-      <div className="relative w-full flex items-center justify-center z-20 my-auto py-4 select-none">
-        <div className="font-august text-[clamp(4.2rem,17vw,17.5rem)] uppercase tracking-[-0.015em] leading-[0.82] flex items-center justify-center text-center whitespace-nowrap">
+      <div className="hero-name-wrap relative w-full flex items-center justify-center z-20 my-auto py-4 select-none">
+        <div className="hero-name font-august uppercase tracking-[-0.015em] leading-[0.82] flex items-center justify-center text-center whitespace-nowrap">
           {/* First Name (ATHARAV) */}
           <div className="inline-flex">
             {firstName.split('').map((char, index) => (
@@ -166,12 +169,10 @@ export default function HeroSection({
           </p>
 
           {/* India Tricolor Pill Bar */}
-          <div className="w-24 h-2 rounded-full overflow-hidden flex shadow-[0_0_15px_rgba(255,153,51,0.3)]">
-            <div className="flex-1 bg-[#FF9933]" />
-            <div className="flex-1 bg-white relative flex items-center justify-center">
-              <span className="w-1 h-1 rounded-full bg-[#000080]" />
-            </div>
-            <div className="flex-1 bg-[#138808]" />
+          <div className="india-rule shadow-[0_0_15px_rgba(255,153,51,0.3)]">
+            <span />
+            <span />
+            <span />
           </div>
         </div>
 
@@ -180,9 +181,7 @@ export default function HeroSection({
           <span className="text-[11px] font-sans tracking-wider text-zinc-300">
             Scroll down to explore
           </span>
-          <span className="text-sm text-zinc-300 animate-bounce">
-            ↓
-          </span>
+          <span className="hero-scroll-arrow">↓</span>
         </div>
       </div>
     </section>
