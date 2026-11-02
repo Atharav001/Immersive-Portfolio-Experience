@@ -7,11 +7,12 @@ export default function HeroSection() {
     <section className="home-hero" aria-labelledby="hero-name">
       <div className="hero-copy">
         <LiquidText as="h1" id="hero-name" intensity={42} className="hero-name">
-          {PORTFOLIO_DATA.firstname.toUpperCase()}
+          <span>{PORTFOLIO_DATA.firstname.toUpperCase()}</span>
+          <span>{PORTFOLIO_DATA.lastname.toUpperCase()}</span>
         </LiquidText>
         <div className="hero-location">
-          <p>{PORTFOLIO_DATA.role} <span aria-hidden="true">·</span> {PORTFOLIO_DATA.city}</p>
           <p>Located in {PORTFOLIO_DATA.location}</p>
+          <i className="india-rule" aria-hidden="true"><span /><span /><span /></i>
         </div>
       </div>
 

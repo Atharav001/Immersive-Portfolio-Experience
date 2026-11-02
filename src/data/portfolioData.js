@@ -154,16 +154,16 @@ export const PORTFOLIO_DATA = {
 
   socials: [
     {
+      name: "GitHub",
+      url: "https://github.com/Atharav001"
+    },
+    {
       name: "LinkedIn",
       url: "https://www.linkedin.com/"
     },
     {
       name: "Twitter / X",
       url: "https://x.com/"
-    },
-    {
-      name: "GitHub",
-      url: "https://github.com/Atharav001"
     }
   ]
 };

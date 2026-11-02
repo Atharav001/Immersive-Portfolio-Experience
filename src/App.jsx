@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { lazy, Suspense, useState } from 'react';
 import CapsuleLoader from './components/CapsuleLoader';
 import Header from './components/Header';
 import HeroSection from './components/HeroSection';
@@ -7,6 +7,8 @@ import WorkSection from './components/WorkSection';
 import ClientsSection from './components/ClientsSection';
 import ContactSection from './components/ContactSection';
 import { PORTFOLIO_DATA } from './data/portfolioData';
+
+const SuitUpExperience = lazy(() => import('./components/SuitUpExperience'));
 
 export default function App() {
   const [showLoader, setShowLoader] = useState(true);
@@ -17,18 +19,23 @@ export default function App() {
       {/* 1. Fast Capsule Loader (Kept as requested) */}
       {showLoader && (
         <CapsuleLoader
-          brandTitle={`${PORTFOLIO_DATA.firstname.toUpperCase()} ${PORTFOLIO_DATA.lastname.toUpperCase()} / ${PORTFOLIO_DATA.role.toUpperCase()}`}
+          brandTitle={`${PORTFOLIO_DATA.firstname.toUpperCase()} ${PORTFOLIO_DATA.lastname.toUpperCase()} / ${PORTFOLIO_DATA.jobTitle.toUpperCase()}`}
           onFinish={() => setShowLoader(false)}
         />
       )}
 
-      {/* 2. Minimal signature and availability bar */}
+      {/* 2. Signature and availability header */}
       <Header />
 
-      {/* 3. Liquid type homepage */}
+      {/* 3. Homepage */}
       <main id="home" className="relative z-10 w-full flex-1 flex flex-col justify-center items-center">
         <HeroSection />
       </main>
+
+      {/* Scroll-driven origin story sequence */}
+      <Suspense fallback={<div className="suitup-story suitup-fallback" aria-hidden="true" />}>
+        <SuitUpExperience />
+      </Suspense>
 
       {/* 4. About & Services Section */}
       <AboutSection />
@@ -39,7 +46,7 @@ export default function App() {
       {/* 6. Client Endorsements & Testimonials */}
       <ClientsSection />
 
-      {/* 7. Compact contact and social links */}
+      {/* 7. Exact Contact Section with 6-Step Inquiry Form & Drone Reel */}
       <ContactSection email={PORTFOLIO_DATA.email} />
 
     </div>

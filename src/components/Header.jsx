@@ -12,8 +12,14 @@ export default function Header() {
       </a>
       <div className="site-availability">
         <span className="availability-dot" aria-hidden="true" />
-        <span>{PORTFOLIO_DATA.availability}</span>
+        <span>available now for work</span>
       </div>
+      <nav className="site-nav" aria-label="Main navigation">
+        <a href="#home">Home</a>
+        <a href="#about">About</a>
+        <a href="#work">Work<span className="nav-star" aria-hidden="true">✳</span></a>
+        <a href="#contact">Contact</a>
+      </nav>
     </header>
   );
 }

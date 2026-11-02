@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { PORTFOLIO_DATA } from '../data/portfolioData';
 
 export default function CapsuleLoader({ onFinish, brandTitle = "ATHARAV NARANG / WISPR FLOW" }) {
   const [percent, setPercent] = useState(0);
@@ -6,6 +7,12 @@ export default function CapsuleLoader({ onFinish, brandTitle = "ATHARAV NARANG /
   const [isClicked, setIsClicked] = useState(false);
   const [isExiting, setIsExiting] = useState(false);
   const wrapRef = useRef(null);
+  const marqueeItems = [
+    `${PORTFOLIO_DATA.firstname} ${PORTFOLIO_DATA.lastname}`,
+    PORTFOLIO_DATA.role,
+    PORTFOLIO_DATA.city,
+    PORTFOLIO_DATA.location,
+  ];
 
   // Mouse tracking for dynamic spotlight glow
   const handleMouseMove = (e) => {
@@ -96,24 +103,12 @@ export default function CapsuleLoader({ onFinish, brandTitle = "ATHARAV NARANG /
       {/* Moving Background Marquee */}
       <div className="loading-marquee">
         <div className="loading-marquee-track">
-          <span>YANNE SIDIBÉ</span>
-          <span>CREATIVE DEVELOPER</span>
-          <span>AEROSPACE & DESIGN</span>
-          <span>HUMAN FACTORS</span>
-          <span>YANNE SIDIBÉ</span>
-          <span>CREATIVE DEVELOPER</span>
-          <span>AEROSPACE & DESIGN</span>
-          <span>HUMAN FACTORS</span>
+          {marqueeItems.map((item, index) => <span key={`marquee-a-${index}`}>{item}</span>)}
+          {marqueeItems.map((item, index) => <span key={`marquee-b-${index}`}>{item}</span>)}
         </div>
         <div className="loading-marquee-track" aria-hidden="true">
-          <span>YANNE SIDIBÉ</span>
-          <span>CREATIVE DEVELOPER</span>
-          <span>AEROSPACE & DESIGN</span>
-          <span>HUMAN FACTORS</span>
-          <span>YANNE SIDIBÉ</span>
-          <span>CREATIVE DEVELOPER</span>
-          <span>AEROSPACE & DESIGN</span>
-          <span>HUMAN FACTORS</span>
+          {marqueeItems.map((item, index) => <span key={`marquee-c-${index}`}>{item}</span>)}
+          {marqueeItems.map((item, index) => <span key={`marquee-d-${index}`}>{item}</span>)}
         </div>
       </div>
 
