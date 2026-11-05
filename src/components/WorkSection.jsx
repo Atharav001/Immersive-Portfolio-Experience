@@ -28,7 +28,7 @@ export default function WorkSection() {
       <div className="project-bento">
         {projects.map((project, index) => (
           <button key={project.id} type="button" className={`project-tile project-tile-${index + 1}`} onClick={() => setSelected(project)} aria-label={`Open case study: ${project.title}`}>
-            <div className="project-visual" style={{ '--project-accent': project.color }}><img src={project.banner} alt="" loading="lazy" /><span className="project-visual-wash" /><span className="project-index">0{index + 1}</span><span className="project-open"><ArrowUpRight size={19} /></span><span className="project-visual-label">{project.category}</span></div>
+            <div className="project-visual" style={{ '--project-accent': project.color }}><img src={project.banner} alt="" loading="lazy" data-fluid-image /><span className="project-visual-wash" /><span className="project-index">0{index + 1}</span><span className="project-open"><ArrowUpRight size={19} /></span><span className="project-visual-label">{project.category}</span></div>
             <div className="project-card-copy"><div><h3>{project.title}</h3><p>{project.tagline}</p></div><span className="project-year">{project.year}</span></div>
           </button>
         ))}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { lazy, Suspense, useState } from 'react';
 import CapsuleLoader from './components/CapsuleLoader';
 import Header from './components/Header';
 import HeroSection from './components/HeroSection';
@@ -7,6 +7,8 @@ import WorkSection from './components/WorkSection';
 import ContactSection from './components/ContactSection';
 import ReactorCursor from './components/ReactorCursor';
 import { PORTFOLIO_DATA } from './data/portfolioData';
+
+const FluidDisplacementEffect = lazy(() => import('./components/FluidDisplacementEffect'));
 
 export default function App() {
   const [showLoader, setShowLoader] = useState(true);
@@ -19,6 +21,7 @@ export default function App() {
       <WorkSection />
       <ContactSection email={PORTFOLIO_DATA.email} />
       <ReactorCursor />
+      {!showLoader && <Suspense fallback={null}><FluidDisplacementEffect /></Suspense>}
     </div>
   );
 }

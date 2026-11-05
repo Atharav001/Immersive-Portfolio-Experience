@@ -609,14 +609,12 @@ img, video, canvas { max-width: 100%; }
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }
 
-/* Local magnetic wordmark: the displacement is clipped to a pointer-sized lens. */
+/* Fluid wordmark planes are drawn by the viewport-sized WebGL displacement pass. */
 .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
 .magnetic-wordmark { --mx: 50%; --my: 50%; position: relative; width: min(100%, 1800px); margin: 0 auto; outline: none; cursor: crosshair; touch-action: pan-y; }
-.wordmark-filter-defs { position: absolute; width: 0; height: 0; overflow: hidden; }
-.wordmark-base, .wordmark-lens { display: flex; justify-content: center; gap: .33em; width: 100%; color: #f8f7fa; text-align: center; font-family: 'August','Arial Narrow',sans-serif; font-size: clamp(4.1rem, 10.2vw, 15.5rem); font-weight: 700; line-height: .88; letter-spacing: .022em; white-space: nowrap; }
-.wordmark-base > span, .wordmark-lens > span { display: inline-block; }
-.wordmark-lens { position: absolute; inset: 0; color: #fff; opacity: 0; -webkit-mask-image: linear-gradient(90deg, transparent calc(var(--mx) - 82px), #000 calc(var(--mx) - 24px), #000 calc(var(--mx) + 24px), transparent calc(var(--mx) + 82px)); mask-image: linear-gradient(90deg, transparent calc(var(--mx) - 82px), #000 calc(var(--mx) - 24px), #000 calc(var(--mx) + 24px), transparent calc(var(--mx) + 82px)); transition: opacity .22s ease; }
-.magnetic-wordmark.is-active .wordmark-lens, .magnetic-wordmark:focus-visible .wordmark-lens { opacity: 1; }
+.magnetic-wordmark { position: relative; width: min(100%, 1800px); margin: 0 auto; }
+.wordmark-base { display: flex; justify-content: center; gap: .33em; width: 100%; color: #f8f7fa; text-align: center; font-family: 'August','Arial Narrow',sans-serif; font-size: clamp(4.1rem, 10.2vw, 15.5rem); font-weight: 700; line-height: .88; letter-spacing: .022em; white-space: nowrap; }
+.wordmark-base > span { display: inline-block; }
 .home-hero { padding-inline: 4vw; background: radial-gradient(ellipse 58% 50% at 50% 38%, #17131c 0%, #0b090d 55%, #050505 88%); }
 .hero-copy { width: 100%; transform: translateY(-1.5vh); }
 .home-hero .hero-location { position: static; margin-top: clamp(52px, 11vh, 140px); }
@@ -670,7 +668,7 @@ img, video, canvas { max-width: 100%; }
 .project-tile:hover { transform: translateY(-6px); border-color: #ffffff38; box-shadow: 0 24px 70px #0007; }
 .project-visual { position: relative; height: clamp(190px, 25vw, 320px); overflow: hidden; background: radial-gradient(circle at 70% 20%,color-mix(in srgb,var(--project-accent),transparent 75%),transparent 55%),#15151c; }
 .project-tile:nth-child(2n) .project-visual { height: clamp(190px, 22vw, 290px); }
-.project-visual img { width: 100%; height: 100%; object-fit: cover; opacity: .78; mix-blend-mode: screen; transition: transform .7s, opacity .4s; }
+.project-visual img { width: 100%; height: 100%; object-fit: cover; opacity: .78; transition: transform .7s, opacity .4s; }
 .project-tile:hover .project-visual img { transform: scale(1.045); opacity: .94; }
 .project-visual-wash { position: absolute; inset: 0; background: linear-gradient(180deg, #06070a15 10%, color-mix(in srgb,var(--project-accent),transparent 86%) 100%); }
 .project-index { position: absolute; top: 17px; left: 18px; color: #f3f2f5; font: 10px ui-monospace, monospace; letter-spacing: .12em; }
@@ -716,7 +714,7 @@ img, video, canvas { max-width: 100%; }
   .site-nav a:nth-child(2) { display: none; }
   .home-hero { min-height: 100svh; padding: 120px 5vw 190px; }
   .hero-copy { transform: translateY(-3vh); }
-  .wordmark-base, .wordmark-lens { flex-direction: column; gap: .14em; font-size: clamp(8rem, 32vw, 13rem); line-height: .8; letter-spacing: .022em; }
+  .wordmark-base { flex-direction: column; gap: .14em; font-size: clamp(8rem, 32vw, 13rem); line-height: .8; letter-spacing: .022em; }
   .home-hero .hero-location { margin-top: clamp(44px, 8vh, 90px); font-size: 10px; }
   .hero-scroll { bottom: 4%; }
   .story-scroll-stage { height: 300svh; min-height: 1800px; }
@@ -743,12 +741,11 @@ img, video, canvas { max-width: 100%; }
   .site-nav { right: 56px; gap: 8px; }
   .site-nav a { font-size: 9px; }
   .reactor-dock { right: 13px; }
-  .wordmark-base, .wordmark-lens { font-size: clamp(7rem, 32vw, 9rem); }
+  .wordmark-base { font-size: clamp(7rem, 32vw, 9rem); }
   .project-card-copy h3 { font-size: 16px; }
 }
 @media(prefers-reduced-motion:reduce) {
   .reactor-cursor { display: none; }
-  .wordmark-lens { transition: opacity .22s ease; }
   .story-scroll-cue i { animation: none; }
 }
 .work-section .work-head, .work-section .project-tile { opacity: 0; transform: translateX(-42px); transition: opacity .75s ease, transform .85s cubic-bezier(.16,1,.3,1); }
@@ -762,3 +759,7 @@ img, video, canvas { max-width: 100%; }
 @media (prefers-reduced-motion: reduce) { .work-section .work-head, .work-section .project-tile { opacity: 1; transform: none; } }
 .work-head h2 { line-height: .98; }
 .work-head h2 em { display: block; font-family: 'ClashDisplay',sans-serif; font-weight: 400; line-height: .98; }
+
+/* Transparent GPU overlay: the page underneath remains fully interactive. */
+.fluid-displacement-canvas { position: fixed; z-index: 40; inset: 0; display: block; width: 100vw; height: 100vh; pointer-events: none; }
+@media (pointer: coarse), (prefers-reduced-motion: reduce) { .fluid-displacement-canvas { display: none; } }
