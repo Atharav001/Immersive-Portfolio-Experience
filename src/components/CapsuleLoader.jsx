@@ -115,7 +115,7 @@ export default function CapsuleLoader({ onFinish, brandTitle = "ATHARAV NARANG /
       {/* Center Capsule Pill Button */}
       <div
         ref={wrapRef}
-        onMouseMove={handleMouseMove}
+        onPointerMove={handleMouseMove}
         onClick={handleCapsuleClick}
         className={`loading-wrap ${isClicked ? 'loading-clicked' : ''}`}
         title={isComplete ? "Click to enter" : "Loading portfolio..."}

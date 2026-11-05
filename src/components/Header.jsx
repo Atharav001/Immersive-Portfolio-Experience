@@ -7,7 +7,7 @@ export default function Header() {
     <header className="site-header">
       <a href="#home" className="site-signature" aria-label={`${PORTFOLIO_DATA.firstname} ${PORTFOLIO_DATA.lastname}`}>
         <LiquidText as="span" intensity={12} className="site-signature-text">
-          {PORTFOLIO_DATA.firstname}
+          {PORTFOLIO_DATA.firstname} {PORTFOLIO_DATA.lastname}
         </LiquidText>
       </a>
       <div className="site-availability">

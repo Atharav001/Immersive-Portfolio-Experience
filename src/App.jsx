@@ -4,7 +4,6 @@ import Header from './components/Header';
 import HeroSection from './components/HeroSection';
 import AboutSection from './components/AboutSection';
 import WorkSection from './components/WorkSection';
-import ClientsSection from './components/ClientsSection';
 import ContactSection from './components/ContactSection';
 import { PORTFOLIO_DATA } from './data/portfolioData';
 
@@ -14,7 +13,7 @@ export default function App() {
   const [showLoader, setShowLoader] = useState(true);
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-[#f0f1fa] font-sans selection:bg-[#a87cff] selection:text-black relative flex flex-col justify-between overflow-x-hidden">
+    <div className="portfolio-shell min-h-screen bg-[#0a0a0a] text-[#f0f1fa] font-sans selection:bg-[#a87cff] selection:text-black relative flex flex-col">
       
       {/* 1. Fast Capsule Loader (Kept as requested) */}
       {showLoader && (
@@ -33,7 +32,7 @@ export default function App() {
       </main>
 
       {/* Scroll-driven origin story sequence */}
-      <Suspense fallback={<div className="suitup-story suitup-fallback" aria-hidden="true" />}>
+      <Suspense fallback={<div id="origin-story" className="suitup-story suitup-fallback" aria-hidden="true" />}>
         <SuitUpExperience />
       </Suspense>
 
@@ -43,10 +42,7 @@ export default function App() {
       {/* 5. Selected Works & Projects Showcase */}
       <WorkSection />
 
-      {/* 6. Client Endorsements & Testimonials */}
-      <ClientsSection />
-
-      {/* 7. Exact Contact Section with 6-Step Inquiry Form & Drone Reel */}
+      {/* 6. Contact */}
       <ContactSection email={PORTFOLIO_DATA.email} />
 
     </div>

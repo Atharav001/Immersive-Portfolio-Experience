@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { PORTFOLIO_DATA } from '../data/portfolioData';
-import { ArrowUpRight, ExternalLink } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 
 export default function WorkSection() {
   const [activeCategory, setActiveCategory] = useState('All');
-  const [hoveredProject, setHoveredProject] = useState(null);
 
   const categories = ['All', 'Development', 'Design', 'Design & Development'];
 
@@ -34,6 +33,8 @@ export default function WorkSection() {
           {categories.map((cat) => (
             <button
               key={cat}
+              type="button"
+              aria-pressed={activeCategory === cat}
               onClick={() => setActiveCategory(cat)}
               className={`px-4 py-2 rounded-full text-xs font-mono transition-all cursor-pointer ${
                 activeCategory === cat
@@ -55,8 +56,6 @@ export default function WorkSection() {
             href={project.link}
             target="_blank"
             rel="noopener noreferrer"
-            onMouseEnter={() => setHoveredProject(project.id)}
-            onMouseLeave={() => setHoveredProject(null)}
             className="group relative flex flex-col justify-between rounded-3xl overflow-hidden border border-white/10 bg-[#101012] p-6 sm:p-8 transition-all duration-500 hover:border-white/30 hover:-translate-y-1"
           >
             {/* Top Bar: Title, Category, Year, Arrow */}

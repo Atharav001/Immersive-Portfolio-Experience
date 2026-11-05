@@ -108,11 +108,10 @@ function createScene(canvas) {
   camera.position.set(0, 0.15, 10.4);
 
   const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: 'high-performance' });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.6));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.12;
-  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.enabled = window.innerWidth >= 700;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
   const world = new THREE.Group();
@@ -133,7 +132,16 @@ function createScene(canvas) {
 
   const handLoader = new GLTFLoader();
   let loadedHand = null;
+  let isDisposed = false;
   handLoader.load('/models/posable-right-hand.glb', (gltf) => {
+    if (isDisposed) {
+      gltf.scene.traverse((child) => {
+        if (!child.isMesh) return;
+        child.geometry?.dispose();
+        (Array.isArray(child.material) ? child.material : [child.material]).forEach((material) => material.dispose());
+      });
+      return;
+    }
     loadedHand = gltf.scene;
     const originalBounds = new THREE.Box3().setFromObject(loadedHand);
     const originalSize = originalBounds.getSize(new THREE.Vector3());
@@ -156,7 +164,7 @@ function createScene(canvas) {
     hand.remove(proceduralHand);
     hand.add(orientation);
   }, undefined, (error) => {
-    console.warn('Rigged hand model could not be loaded; using the procedural fallback.', error);
+    if (!isDisposed) console.warn('Rigged hand model could not be loaded; using the procedural fallback.', error);
   });
 
   const armorParts = [];
@@ -169,7 +177,7 @@ function createScene(canvas) {
     const seam = new THREE.Mesh(new RoundedBoxGeometry(size[0] * 0.68, size[1] * 0.045, size[2] * 1.02, 3, 0.018), armorGold);
     seam.position.z = size[2] * 0.53;
     group.add(seam);
-    group.position.set(target[0] + (Math.random() > 0.5 ? 1 : -1) * (3.2 + Math.random() * 1.4), target[1] + 1.2 + Math.random() * 2, target[2] - 0.8);
+    group.position.set(target[0] + 4.2 + Math.random() * 1.8, target[1] + (Math.random() - 0.35) * 3.6, target[2] - 0.8);
     group.rotation.set((Math.random() - 0.5) * 2, (Math.random() - 0.5) * 2, (Math.random() - 0.5) * 2);
     hand.add(group);
     geometries.push(shell.geometry, seam.geometry);
@@ -227,7 +235,7 @@ function createScene(canvas) {
   repulsorLight.position.set(0, 0.25, 0.85);
   scene.add(repulsorLight);
 
-  const count = window.innerWidth < 700 ? 380 : 720;
+  const count = window.innerWidth < 700 ? 240 : 600;
   const positions = new Float32Array(count * 3);
   const basePositions = new Float32Array(count * 3);
   for (let i = 0; i < count; i += 1) {
@@ -254,6 +262,9 @@ function createScene(canvas) {
     const height = canvas.clientHeight || window.innerHeight;
     camera.aspect = width / height;
     camera.position.z = width < 700 ? 14.5 : 10.4;
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, width < 700 ? 1.25 : 1.6));
+    renderer.shadowMap.enabled = width >= 700;
+    key.castShadow = width >= 700;
     hand.position.x = width < 700 ? 0.1 : 0;
     hand.position.y = width < 700 ? -0.28 : 0;
     camera.updateProjectionMatrix();
@@ -277,22 +288,24 @@ function createScene(canvas) {
   let raf = 0;
   let isInView = false;
   const clock = new THREE.Clock();
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const render = () => {
     if (!isInView) return;
     raf = requestAnimationFrame(render);
     const time = clock.getElapsedTime();
     currentProgress += (targetProgress.value - currentProgress) * 0.075;
     const p = currentProgress;
-    hand.rotation.y = Math.sin(time * 0.34) * 0.12 + pointer.x * 0.13 + p * Math.PI;
-    hand.rotation.x = Math.sin(time * 0.26) * 0.035 + pointer.y * 0.055;
-    hand.rotation.z = Math.sin(time * 0.18) * 0.025;
-    hand.position.y = Math.sin(time * 0.8) * 0.045;
-    world.rotation.y = pointer.x * 0.045;
+    const motionScale = reduceMotion ? 0 : 1;
+    hand.rotation.y = Math.sin(time * 0.34) * 0.12 * motionScale + pointer.x * 0.13 + p * Math.PI;
+    hand.rotation.x = Math.sin(time * 0.26) * 0.035 * motionScale + pointer.y * 0.055;
+    hand.rotation.z = Math.sin(time * 0.18) * 0.025 * motionScale;
+    hand.position.y = Math.sin(time * 0.8) * 0.045 * motionScale;
+    world.rotation.y = pointer.x * 0.045 * motionScale;
 
     let connectionGlow = 0;
     armorParts.forEach((part) => {
       const arrival = smooth((p - (0.12 + part.order * 0.205)) / 0.2);
-      const arc = Math.sin(arrival * Math.PI) * 0.34;
+      const arc = Math.sin(arrival * Math.PI) * 0.34 * motionScale;
       const impact = smooth((arrival - 0.88) / 0.06) * (1 - smooth((arrival - 0.97) / 0.03));
       connectionGlow = Math.max(connectionGlow, impact);
       part.group.position.lerpVectors(part.start, part.target, arrival);
@@ -345,6 +358,7 @@ function createScene(canvas) {
   observer.observe(canvas.closest('.suitup-story'));
 
   return () => {
+    isDisposed = true;
     cancelAnimationFrame(raf);
     observer.disconnect();
     window.removeEventListener('resize', resize);
@@ -373,7 +387,7 @@ export default function SuitUpExperience() {
   }, []);
 
   return (
-    <section className="suitup-story" aria-label="A hand suits up with a futuristic armored gauntlet">
+    <section id="origin-story" className="suitup-story" aria-label="A hand suits up with a futuristic armored gauntlet">
       <div className="suitup-sticky">
         <div className="suitup-atmosphere" />
         <canvas ref={canvasRef} className="suitup-canvas" aria-hidden="true" />

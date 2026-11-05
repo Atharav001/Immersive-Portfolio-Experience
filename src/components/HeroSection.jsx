@@ -16,7 +16,7 @@ export default function HeroSection() {
         </div>
       </div>
 
-      <a href="#contact" className="hero-scroll" aria-label="Scroll to contact">
+      <a href="#origin-story" className="hero-scroll" aria-label="Scroll to the origin story">
         <span>Scroll</span><span className="hero-scroll-arrow" aria-hidden="true">↓</span>
       </a>
     </section>
