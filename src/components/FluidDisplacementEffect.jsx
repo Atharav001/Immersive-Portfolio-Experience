@@ -58,17 +58,23 @@ const contentFragment = `
   uniform float uOpacity;
   uniform float uIsImage;
   uniform float uTime;
+  uniform float uSeed;
+  float hash21(vec2 p) {
+    p = fract(p * vec2(123.34, 456.21));
+    p += dot(p, p + 45.32);
+    return fract(p.x * p.y);
+  }
   void main() {
     vec2 screenUv = gl_FragCoord.xy / uResolution;
     vec4 trail = texture2D(uTrail, screenUv);
     float strength = clamp(trail.b * 1.35, 0.0, 1.0);
     vec2 flow = trail.rg * 2.0 - 1.0;
     vec2 direction = normalize(flow + vec2(0.00001, 0.00001));
-    vec2 perpendicular = vec2(-direction.y, direction.x);
     vec2 baseUv = (vUv - 0.5) * uUvScale + 0.5;
-    vec2 drag = direction * (strength * (uIsImage > 0.5 ? 0.10 : 0.075));
-    float ripple = sin(vUv.y * 38.0 + uTime * 3.0) * strength * 0.016;
-    vec2 draggedUv = baseUv - drag - perpendicular * ripple;
+    float irregularity = mix(0.72, 1.28, hash21(floor(vUv * vec2(11.0, 8.0)) + uSeed));
+    float edgeGrip = smoothstep(0.0, 0.18, baseUv.x) * smoothstep(1.0, 0.82, baseUv.x);
+    vec2 drag = direction * strength * irregularity * edgeGrip * (uIsImage > 0.5 ? 0.075 : 0.16);
+    vec2 draggedUv = baseUv - drag;
     vec4 crisp = texture2D(uContent, baseUv);
     vec4 smeared = texture2D(uContent, draggedUv);
     vec4 color = mix(crisp, smeared, strength);
@@ -83,24 +89,29 @@ function makeTextTexture(element) {
   const rect = element.getBoundingClientRect();
   if (!rect.width || !rect.height) return null;
   const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const style = getComputedStyle(element);
+  const fontSize = Number.parseFloat(style.fontSize) || rect.height;
+  const paddingX = Math.max(10, fontSize * 0.14);
+  const paddingY = Math.max(8, fontSize * 0.1);
+  const drawWidth = rect.width + paddingX * 2;
+  const drawHeight = rect.height + paddingY * 2;
   const canvas = document.createElement('canvas');
-  canvas.width = Math.max(1, Math.ceil(rect.width * dpr));
-  canvas.height = Math.max(1, Math.ceil(rect.height * dpr));
+  canvas.width = Math.max(1, Math.ceil(drawWidth * dpr));
+  canvas.height = Math.max(1, Math.ceil(drawHeight * dpr));
   const context = canvas.getContext('2d');
   if (!context) return null;
   context.scale(dpr, dpr);
-  const style = getComputedStyle(element);
   context.font = style.font;
   context.textAlign = 'center';
   context.textBaseline = 'middle';
   context.fillStyle = style.color;
   if ('letterSpacing' in context) context.letterSpacing = style.letterSpacing;
-  context.fillText(element.textContent.trim(), rect.width / 2, rect.height / 2, rect.width);
+  context.fillText(element.textContent.trim(), drawWidth / 2, drawHeight / 2, rect.width + paddingX);
   const texture = new CanvasTexture(canvas);
   texture.colorSpace = SRGBColorSpace;
   texture.minFilter = LinearFilter;
   texture.magFilter = LinearFilter;
-  return texture;
+  return { texture, paddingX, paddingY };
 }
 
 export default function FluidDisplacementEffect() {
@@ -154,13 +165,25 @@ export default function FluidDisplacementEffect() {
 
     const setMeshRect = (entry) => {
       const rect = entry.element.getBoundingClientRect();
+      const paddingX = entry.paddingX || 0;
+      const paddingY = entry.paddingY || 0;
+      const drawRect = {
+        left: rect.left - paddingX,
+        top: rect.top - paddingY,
+        width: rect.width + paddingX * 2,
+        height: rect.height + paddingY * 2,
+      };
       const width = window.innerWidth;
       const height = window.innerHeight;
       const visible = rect.width > 0 && rect.height > 0 && rect.bottom > 0 && rect.top < height && rect.right > 0 && rect.left < width;
       entry.mesh.visible = visible;
       if (!visible) return;
-      entry.mesh.position.set(2 * (rect.left + rect.width / 2) / width - 1, 1 - 2 * (rect.top + rect.height / 2) / height, 0);
-      entry.mesh.scale.set(rect.width / width, rect.height / height, 1);
+      entry.mesh.position.set(
+        2 * (drawRect.left + drawRect.width / 2 + entry.offset.x) / width - 1,
+        1 - 2 * (drawRect.top + drawRect.height / 2 + entry.offset.y) / height,
+        0,
+      );
+      entry.mesh.scale.set(drawRect.width / width, drawRect.height / height, 1);
       entry.material.uniforms.uOpacity.value = entry.kind === 'image' ? Number.parseFloat(getComputedStyle(entry.element).opacity) || 1 : 1;
     };
 
@@ -176,6 +199,16 @@ export default function FluidDisplacementEffect() {
       contentScene.children.forEach((mesh, index) => {
         const entry = targets[index];
         if (entry) {
+          if (entry.kind === 'text') {
+            entry.velocity.x += -entry.offset.x * 0.065;
+            entry.velocity.y += -entry.offset.y * 0.065;
+            entry.velocity.multiplyScalar(0.78);
+            entry.offset.add(entry.velocity);
+            if (entry.offset.lengthSq() < 0.004 && entry.velocity.lengthSq() < 0.004) {
+              entry.offset.set(0, 0);
+              entry.velocity.set(0, 0);
+            }
+          }
           setMeshRect(entry);
           entry.material.uniforms.uTrail.value = readTarget.texture;
           entry.material.uniforms.uResolution.value.copy(resolution);
@@ -188,7 +221,8 @@ export default function FluidDisplacementEffect() {
       if (now < activeUntil) raf = requestAnimationFrame(draw);
     };
 
-    const makeEntry = (element, kind, texture) => {
+    const makeEntry = (element, kind, source) => {
+      const texture = source.texture || source;
       if (!ready) { texture.dispose(); return; }
       const rect = element.getBoundingClientRect();
       const material = new ShaderMaterial({
@@ -200,6 +234,7 @@ export default function FluidDisplacementEffect() {
           uOpacity: { value: kind === 'image' ? Number.parseFloat(getComputedStyle(element).opacity) || 1 : 1 },
           uIsImage: { value: kind === 'image' ? 1 : 0 },
           uTime: { value: 0 },
+          uSeed: { value: Math.random() * 100 },
         },
         vertexShader: contentVertex,
         fragmentShader: contentFragment,
@@ -222,7 +257,14 @@ export default function FluidDisplacementEffect() {
       const mesh = new Mesh(contentGeometry, material);
       mesh.renderOrder = targets.length + 1;
       contentScene.add(mesh);
-      const entry = { element, kind, texture, material, mesh };
+      const entry = {
+        element, kind, texture, material, mesh,
+        paddingX: source.paddingX || 0,
+        paddingY: source.paddingY || 0,
+        offset: new Vector2(),
+        velocity: new Vector2(),
+        magnetism: 0.78 + Math.random() * 0.5,
+      };
       targets.push(entry);
       entries.set(element, entry);
       schedule(100);
@@ -243,7 +285,7 @@ export default function FluidDisplacementEffect() {
     const syncTargets = () => {
       if (!ready) return;
       const elements = [
-        ...document.querySelectorAll('.wordmark-base > [data-fluid-text]'),
+        ...document.querySelectorAll('.wordmark-base [data-fluid-text]'),
         ...document.querySelectorAll('img[data-fluid-image]'),
       ];
       elements.forEach((element) => {
@@ -298,8 +340,22 @@ export default function FluidDisplacementEffect() {
       previous.copy(pointer);
       pointer.copy(next);
       strength = Math.min(0.92, 0.18 + speed * 0.42);
+      targets.forEach((entry) => {
+        if (entry.kind !== 'text') return;
+        const rect = entry.element.getBoundingClientRect();
+        const nearestX = Math.max(rect.left, Math.min(event.clientX, rect.right));
+        const nearestY = Math.max(rect.top, Math.min(event.clientY, rect.bottom));
+        const distance = Math.hypot(event.clientX - nearestX, event.clientY - nearestY);
+        const influence = Math.exp(-(distance * distance) / (2 * 74 * 74));
+        if (influence < 0.025) return;
+        const randomPull = 0.82 + Math.sin(entry.material.uniforms.uSeed.value * 12.7 + event.clientX * 0.013) * 0.18;
+        entry.velocity.x += dx * influence * entry.magnetism * randomPull * 0.34;
+        entry.velocity.y += dy * influence * entry.magnetism * randomPull * 0.34;
+        const length = entry.offset.length();
+        if (length > 72) entry.offset.multiplyScalar(72 / length);
+      });
       stampPending = true;
-      schedule(1700);
+      schedule(2200);
     };
 
     const onScroll = () => schedule(100);
@@ -331,7 +387,7 @@ export default function FluidDisplacementEffect() {
         uniforms: {
           uPrevious: { value: readTarget.texture }, uResolution: { value: resolution.clone() },
           uPointer: { value: pointer.clone() }, uPreviousPointer: { value: previous.clone() },
-          uDecay: { value: 0.958 }, uRadius: { value: 44 }, uStrength: { value: strength }, uStamp: { value: 0 },
+          uDecay: { value: 0.943 }, uRadius: { value: 38 }, uStrength: { value: strength }, uStamp: { value: 0 },
         },
         vertexShader: trailVertex, fragmentShader: trailFragment, depthTest: false, depthWrite: false, toneMapped: false,
       });
