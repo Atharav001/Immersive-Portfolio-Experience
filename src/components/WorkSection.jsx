@@ -7,12 +7,28 @@ export default function WorkSection() {
   const sectionRef = useRef(null);
   useEffect(() => {
     const node = sectionRef.current;
-    if (!node || !('IntersectionObserver' in window)) return undefined;
-    const observer = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) { node.classList.add('is-visible'); observer.disconnect(); }
-    }, { threshold: 0.08 });
-    observer.observe(node);
-    return () => observer.disconnect();
+    if (!node) return undefined;
+    let frame = 0;
+    const updateReveal = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => {
+        const rect = node.getBoundingClientRect();
+        const progress = Math.min(1, Math.max(0, (window.innerHeight - rect.top) / (window.innerHeight * 0.72)));
+        node.style.setProperty('--work-clip', `${(1 - progress) * 100}%`);
+        node.style.setProperty('--work-shift', `${(1 - progress) * -6}vw`);
+        node.classList.toggle('is-visible', progress > 0.12);
+      });
+    };
+    updateReveal();
+    window.addEventListener('scroll', updateReveal, { passive: true });
+    window.addEventListener('resize', updateReveal);
+    window.addEventListener('hashchange', updateReveal);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener('scroll', updateReveal);
+      window.removeEventListener('resize', updateReveal);
+      window.removeEventListener('hashchange', updateReveal);
+    };
   }, []);
   useEffect(() => {
     if (!selected) return undefined;
