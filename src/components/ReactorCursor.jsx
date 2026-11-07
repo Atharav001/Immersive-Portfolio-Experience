@@ -79,7 +79,7 @@ export default function ReactorCursor() {
       window.removeEventListener('resize', resize);
     };
   }, []);
-  return <div ref={cursorRef} className="reactor-cursor is-docked" aria-hidden="true"><svg viewBox="0 0 40 40"><path className="cursor-triangle" d="M20 2 38 36H2Z" /><path className="cursor-core" d="M20 10 27 29H13Z" /></svg></div>;
+  return <div ref={cursorRef} className="reactor-cursor is-docked" aria-hidden="true"><svg viewBox="0 0 40 40"><path className="cursor-triangle" d="M20 3 L37.32 33 L2.68 33 Z" /><path className="cursor-core" d="M20 10.5 L30.1 28 L9.9 28 Z" /></svg></div>;
 }
 
 export function ReactorDock() {
@@ -87,10 +87,11 @@ export function ReactorDock() {
     <span className="reactor-dock" aria-hidden="true">
       <svg viewBox="0 0 100 100">
         <circle className="dock-ring-outer" cx="50" cy="50" r="46" />
-        <circle className="dock-ring-inner" cx="50" cy="50" r="39" />
-        <path className="dock-brace" d="M14 22 27 36M18 15 33 36M86 22 73 36M82 15 67 36" />
-        <path className="dock-triangle-outer" d="M24 36 76 36 50 81Z" />
-        <path className="dock-triangle-inner" d="M35 43 65 43 50 69Z" />
+        <circle className="dock-ring-middle" cx="50" cy="50" r="40" />
+        <circle className="dock-ring-inner" cx="50" cy="50" r="35" />
+        <path className="dock-brace" d="M50 5V14 M50 86V95 M11 27.5L18.8 32 M81.2 68L89 72.5 M11 72.5L18.8 68 M81.2 32L89 27.5" />
+        <path className="dock-triangle-outer" d="M20 31 L80 31 L50 82.96 Z" />
+        <path className="dock-triangle-inner" d="M32 38 L68 38 L50 69.18 Z" />
       </svg>
     </span>
   );

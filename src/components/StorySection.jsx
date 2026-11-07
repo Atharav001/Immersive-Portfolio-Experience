@@ -7,20 +7,41 @@ export default function StorySection({ src = '/media/life-story.mp4' }) {
   useEffect(() => {
     if (!src) return undefined;
     let frame = 0;
+    let targetTime = 0.6;
+    let seeking = false;
+    const easeSeek = () => {
+      frame = 0;
+      const video = videoRef.current;
+      if (!video || !Number.isFinite(video.duration)) return;
+      const difference = targetTime - video.currentTime;
+      if (Math.abs(difference) < 0.008) {
+        video.currentTime = targetTime;
+        seeking = false;
+        return;
+      }
+      video.currentTime += difference * 0.16;
+      seeking = true;
+      frame = requestAnimationFrame(easeSeek);
+    };
+    const scheduleSeek = () => {
+      if (!frame) frame = requestAnimationFrame(easeSeek);
+    };
+    const mapTimeline = (progress, duration) => {
+      const visibleStart = Math.min(0.6, duration * 0.06);
+      const visibleEnd = Math.max(visibleStart, duration - 0.04);
+      if (progress <= 0.36) return visibleStart + (3.9 - visibleStart) * (progress / 0.36);
+      if (progress <= 0.68) return 4.06 + (6.94 - 4.06) * ((progress - 0.36) / 0.32);
+      return 7.06 + (visibleEnd - 7.06) * ((progress - 0.68) / 0.32);
+    };
     const scrub = () => {
-      cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(() => {
-        const section = sectionRef.current;
-        const video = videoRef.current;
-        if (!section || !video || !Number.isFinite(video.duration)) return;
-        const rect = section.getBoundingClientRect();
-        const progress = Math.min(1, Math.max(0, -rect.top / (section.offsetHeight - innerHeight)));
-        const filmProgress = Math.min(1, progress / 0.78);
-        const visibleStart = Math.min(0.6, video.duration * 0.06);
-        const visibleEnd = Math.max(visibleStart, video.duration - 0.04);
-        const targetTime = visibleStart + filmProgress * (visibleEnd - visibleStart);
-        if (Math.abs(video.currentTime - targetTime) > 0.025) video.currentTime = targetTime;
-      });
+      const section = sectionRef.current;
+      const video = videoRef.current;
+      if (!section || !video || !Number.isFinite(video.duration)) return;
+      const rect = section.getBoundingClientRect();
+      const progress = Math.min(1, Math.max(0, -rect.top / (section.offsetHeight - innerHeight)));
+      const filmProgress = Math.min(1, progress / 0.78);
+      targetTime = mapTimeline(filmProgress, video.duration);
+      scheduleSeek();
     };
     const ready = () => scrub();
     window.addEventListener('scroll', scrub, { passive: true });
@@ -31,6 +52,7 @@ export default function StorySection({ src = '/media/life-story.mp4' }) {
     if (video?.readyState >= 1) ready();
     return () => {
       cancelAnimationFrame(frame);
+      seeking = false;
       window.removeEventListener('scroll', scrub);
       window.removeEventListener('resize', scrub);
       video?.removeEventListener('loadedmetadata', ready);
