@@ -67,17 +67,20 @@ const contentFragment = `
   void main() {
     vec2 screenUv = gl_FragCoord.xy / uResolution;
     vec4 trail = texture2D(uTrail, screenUv);
-    float strength = clamp(trail.b * 1.35, 0.0, 1.0);
+    float strength = smoothstep(0.035, 0.86, trail.b);
     vec2 flow = trail.rg * 2.0 - 1.0;
     vec2 direction = normalize(flow + vec2(0.00001, 0.00001));
     vec2 baseUv = (vUv - 0.5) * uUvScale + 0.5;
-    float irregularity = mix(0.72, 1.28, hash21(floor(vUv * vec2(11.0, 8.0)) + uSeed));
-    float edgeGrip = smoothstep(0.0, 0.18, baseUv.x) * smoothstep(1.0, 0.82, baseUv.x);
-    vec2 drag = direction * strength * irregularity * edgeGrip * (uIsImage > 0.5 ? 0.075 : 0.16);
-    vec2 draggedUv = baseUv - drag;
+    float grain = hash21(floor(vUv * vec2(17.0, 13.0)) + uSeed);
+    float irregularity = mix(0.82, 1.18, grain);
+    float pull = strength * strength * irregularity * (uIsImage > 0.5 ? 0.07 : 0.205);
+    vec2 crossFlow = vec2(-direction.y, direction.x);
+    vec2 elasticCurl = crossFlow * sin((vUv.x + vUv.y) * 31.0 + uSeed) * strength * 0.008;
+    vec2 draggedUv = baseUv - direction * pull + elasticCurl;
     vec4 crisp = texture2D(uContent, baseUv);
     vec4 smeared = texture2D(uContent, draggedUv);
-    vec4 color = mix(crisp, smeared, strength);
+    vec4 stretched = texture2D(uContent, baseUv - direction * pull * 0.48);
+    vec4 color = mix(crisp, mix(stretched, smeared, 0.58), strength);
     color.a *= uOpacity;
     gl_FragColor = color;
     #include <tonemapping_fragment>
@@ -199,16 +202,6 @@ export default function FluidDisplacementEffect() {
       contentScene.children.forEach((mesh, index) => {
         const entry = targets[index];
         if (entry) {
-          if (entry.kind === 'text') {
-            entry.velocity.x += -entry.offset.x * 0.065;
-            entry.velocity.y += -entry.offset.y * 0.065;
-            entry.velocity.multiplyScalar(0.78);
-            entry.offset.add(entry.velocity);
-            if (entry.offset.lengthSq() < 0.004 && entry.velocity.lengthSq() < 0.004) {
-              entry.offset.set(0, 0);
-              entry.velocity.set(0, 0);
-            }
-          }
           setMeshRect(entry);
           entry.material.uniforms.uTrail.value = readTarget.texture;
           entry.material.uniforms.uResolution.value.copy(resolution);
@@ -262,8 +255,6 @@ export default function FluidDisplacementEffect() {
         paddingX: source.paddingX || 0,
         paddingY: source.paddingY || 0,
         offset: new Vector2(),
-        velocity: new Vector2(),
-        magnetism: 0.78 + Math.random() * 0.5,
       };
       targets.push(entry);
       entries.set(element, entry);
@@ -340,22 +331,8 @@ export default function FluidDisplacementEffect() {
       previous.copy(pointer);
       pointer.copy(next);
       strength = Math.min(0.92, 0.18 + speed * 0.42);
-      targets.forEach((entry) => {
-        if (entry.kind !== 'text') return;
-        const rect = entry.element.getBoundingClientRect();
-        const nearestX = Math.max(rect.left, Math.min(event.clientX, rect.right));
-        const nearestY = Math.max(rect.top, Math.min(event.clientY, rect.bottom));
-        const distance = Math.hypot(event.clientX - nearestX, event.clientY - nearestY);
-        const influence = Math.exp(-(distance * distance) / (2 * 74 * 74));
-        if (influence < 0.025) return;
-        const randomPull = 0.82 + Math.sin(entry.material.uniforms.uSeed.value * 12.7 + event.clientX * 0.013) * 0.18;
-        entry.velocity.x += dx * influence * entry.magnetism * randomPull * 0.34;
-        entry.velocity.y += dy * influence * entry.magnetism * randomPull * 0.34;
-        const length = entry.offset.length();
-        if (length > 72) entry.offset.multiplyScalar(72 / length);
-      });
       stampPending = true;
-      schedule(2200);
+      schedule(1450);
     };
 
     const onScroll = () => schedule(100);
@@ -387,7 +364,7 @@ export default function FluidDisplacementEffect() {
         uniforms: {
           uPrevious: { value: readTarget.texture }, uResolution: { value: resolution.clone() },
           uPointer: { value: pointer.clone() }, uPreviousPointer: { value: previous.clone() },
-          uDecay: { value: 0.943 }, uRadius: { value: 38 }, uStrength: { value: strength }, uStamp: { value: 0 },
+          uDecay: { value: 0.91 }, uRadius: { value: 30 }, uStrength: { value: strength }, uStamp: { value: 0 },
         },
         vertexShader: trailVertex, fragmentShader: trailFragment, depthTest: false, depthWrite: false, toneMapped: false,
       });
