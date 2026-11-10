@@ -59,6 +59,7 @@ const contentFragment = `
   uniform float uIsImage;
   uniform float uTime;
   uniform float uSeed;
+  uniform vec2 uPlanePixels;
   float hash21(vec2 p) {
     p = fract(p * vec2(123.34, 456.21));
     p += dot(p, p + 45.32);
@@ -71,16 +72,12 @@ const contentFragment = `
     vec2 flow = trail.rg * 2.0 - 1.0;
     vec2 direction = normalize(flow + vec2(0.00001, 0.00001));
     vec2 baseUv = (vUv - 0.5) * uUvScale + 0.5;
-    float grain = hash21(floor(vUv * vec2(17.0, 13.0)) + uSeed);
-    float irregularity = mix(0.82, 1.18, grain);
-    float pull = strength * strength * irregularity * (uIsImage > 0.5 ? 0.07 : 0.205);
+    float irregularity = 0.94 + 0.06 * sin(vUv.y * 12.0 + uSeed);
+    float pull = strength * irregularity * (uIsImage > 0.5 ? 24.0 : 42.0);
     vec2 crossFlow = vec2(-direction.y, direction.x);
-    vec2 elasticCurl = crossFlow * sin((vUv.x + vUv.y) * 31.0 + uSeed) * strength * 0.008;
-    vec2 draggedUv = baseUv - direction * pull + elasticCurl;
-    vec4 crisp = texture2D(uContent, baseUv);
-    vec4 smeared = texture2D(uContent, draggedUv);
-    vec4 stretched = texture2D(uContent, baseUv - direction * pull * 0.48);
-    vec4 color = mix(crisp, mix(stretched, smeared, 0.58), strength);
+    vec2 elasticCurl = crossFlow * sin(vUv.y * 12.0 + uSeed) * strength * 2.0;
+    vec2 draggedUv = baseUv + (-direction * pull + elasticCurl) / uPlanePixels;
+    vec4 color = texture2D(uContent, draggedUv);
     color.a *= uOpacity;
     gl_FragColor = color;
     #include <tonemapping_fragment>
@@ -187,6 +184,7 @@ export default function FluidDisplacementEffect() {
         0,
       );
       entry.mesh.scale.set(drawRect.width / width, drawRect.height / height, 1);
+      entry.material.uniforms.uPlanePixels.value.set(drawRect.width, drawRect.height);
       entry.material.uniforms.uOpacity.value = entry.kind === 'image' ? Number.parseFloat(getComputedStyle(entry.element).opacity) || 1 : 1;
     };
 
@@ -228,6 +226,7 @@ export default function FluidDisplacementEffect() {
           uIsImage: { value: kind === 'image' ? 1 : 0 },
           uTime: { value: 0 },
           uSeed: { value: Math.random() * 100 },
+          uPlanePixels: { value: new Vector2(1, 1) },
         },
         vertexShader: contentVertex,
         fragmentShader: contentFragment,

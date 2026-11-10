@@ -774,6 +774,17 @@ img, video, canvas { max-width: 100%; }
 .work-head h2 em { display: block; font-family: 'ClashDisplay',sans-serif; font-weight: 400; line-height: .98; }
 
 /* Transparent GPU overlay: the page underneath remains fully interactive. */
+.site-signature-text { font-weight: 500; letter-spacing: -.035em; transition: letter-spacing .5s ease, color .4s ease; }
+.site-signature:hover .site-signature-text { letter-spacing: .025em; color: #bcefff; }
+.site-availability { border-color: #78d6ab45; background: linear-gradient(135deg,#16372b99,#11201e88); box-shadow: inset 0 1px #b7ffdf12, 0 8px 32px #0002; }
+.site-nav a { padding: 5px 0; transition: color .25s ease, transform .35s cubic-bezier(.2,.8,.2,1); }
+.contact-panel { background: radial-gradient(ellipse at 80% 100%,#12232b 0%,#080d12 45%,#05090c 85%); }
+.contact-cta { transition: color .35s ease; }
+.contact-cta:hover { color: #bcefff; }
+.contact-meta-grid a { transition: color .25s ease, transform .3s ease; }
+.contact-meta-grid a:hover { color: #bcefff; transform: translateX(4px); }
+.project-tile { transition: border-color .4s ease, box-shadow .4s ease; }
+.project-tile:hover { border-color: #92d9ee55; box-shadow: 0 20px 60px #0005, inset 0 1px #d0f5ff15; }
 .fluid-displacement-canvas { position: fixed; z-index: 40; inset: 0; display: block; width: 100vw; height: 100vh; pointer-events: none; }
 @media (pointer: coarse), (prefers-reduced-motion: reduce) { .fluid-displacement-canvas { display: none; } }
 
