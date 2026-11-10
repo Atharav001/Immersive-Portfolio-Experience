@@ -774,6 +774,22 @@ img, video, canvas { max-width: 100%; }
 .work-head h2 em { display: block; font-family: 'ClashDisplay',sans-serif; font-weight: 400; line-height: .98; }
 
 /* Transparent GPU overlay: the page underneath remains fully interactive. */
+/* Shared rhythm and interaction finishes. */
+.home-hero { background: radial-gradient(ellipse 70% 55% at 50% 15%, #201630 0%, #100e19 48%, #030809 100%); }
+.wordmark-word { gap: .035em; }
+.site-signature::after { content: 'AN'; display: inline-grid; place-items: center; margin-left: 10px; width: 26px; height: 26px; color: #101019; background: #f4f1fa; border-radius: 7px; font: 10px ui-monospace,monospace; transition: transform .6s cubic-bezier(.2,.8,.2,1); }
+.site-signature:hover::after { transform: rotate(12deg) translateY(-4px); }
+.site-nav a::after { content: ''; position: absolute; bottom: 0; right: 0; width: 100%; height: 1px; background: currentColor; transform: scaleX(0); transform-origin: right; transition: transform .35s ease; opacity: .5; }
+.site-nav a:hover::after, .site-nav a[aria-current='location']::after { transform: scaleX(1); }
+.hero-scroll { transition: color .3s; }
+.hero-scroll:hover { color: #f5f3fa; }
+.work-section { padding-block: clamp(70px,8vw,120px); }
+.work-section.is-visible .project-tile:hover { transform: translateY(-7px); }
+.project-tile:focus-visible, .case-study-link:focus-visible, .site-nav a:focus-visible, .contact-cta:focus-visible { outline: 2px solid #b4eaff; outline-offset: 6px; }
+.contact-cta { padding-bottom: 16px; }
+.contact-cta:hover svg { transform: translate(8px,-8px) rotate(-8deg); }
+@media(min-width:701px) { .wordmark-base { font-size: clamp(8rem,min(20vw,38vh),32rem); } .home-hero .hero-location { margin-top: clamp(35px,7vh,95px); } .site-availability { top: 26px !important; } }
+@media(max-width:700px) { .site-signature::after { width: 21px; height: 21px; margin-left: 6px; font-size: 8px; } .site-nav { top: 67px; right: 18px; left: 18px; flex-direction: row; justify-content: center; gap: 24px; } .site-nav a { font-size: 12px; } .site-availability { top: 110px; } .home-hero { padding-top: 170px; } .wordmark-word { gap: .025em; } }
 .site-signature-text { font-weight: 500; letter-spacing: -.035em; transition: letter-spacing .5s ease, color .4s ease; }
 .site-signature:hover .site-signature-text { letter-spacing: .025em; color: #bcefff; }
 .site-availability { border-color: #78d6ab45; background: linear-gradient(135deg,#16372b99,#11201e88); box-shadow: inset 0 1px #b7ffdf12, 0 8px 32px #0002; }

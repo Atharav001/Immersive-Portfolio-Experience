@@ -47,7 +47,7 @@ export default function ReactorCursor() {
         const inverse = 1 - ease;
         const nextX = inverse * inverse * start.x + 2 * inverse * ease * control.x + ease * ease * end.x;
         const nextY = inverse * inverse * start.y + 2 * inverse * ease * control.y + ease * ease * end.y;
-        const rotation = 180 * clamp01(t / 0.3);
+        const rotation = 180 * (1 - Math.pow(1 - t, 2));
         setPose(nextX, nextY, rotation);
         if (t < 1) returnFrame = requestAnimationFrame(animate);
         else {
