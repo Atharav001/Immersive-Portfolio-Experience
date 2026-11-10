@@ -774,6 +774,10 @@ img, video, canvas { max-width: 100%; }
 .work-head h2 em { display: block; font-family: 'ClashDisplay',sans-serif; font-weight: 400; line-height: .98; }
 
 /* Transparent GPU overlay: the page underneath remains fully interactive. */
+/* The reactor remains above the ambient dimmer while docked. */
+body::after { content: ''; position: fixed; inset: 0; z-index: 49; background: #02060c; opacity: 0; pointer-events: none; transition: opacity 900ms cubic-bezier(.22,1,.36,1); }
+body:has(.reactor-cursor.is-docked)::after { opacity: .14; }
+@media (hover: none), (pointer: coarse), (prefers-reduced-motion: reduce) { body:has(.reactor-cursor.is-docked)::after { opacity: 0; } }
 .site-header .nav-circuits { inset: 0; width: 100%; height: 220px; overflow: visible; opacity: 1; animation: none; }
 .nav-circuits .circuit-track { display: none; }
 .nav-circuits .circuit-pulse { stroke: #e5fcff; stroke-width: 2.4; stroke-linecap: round; stroke-dasharray: 24 110; opacity: 0; filter: drop-shadow(0 0 3px #59dfff) drop-shadow(0 0 7px #28bfff); }
