@@ -43,6 +43,7 @@ export default function Header() {
         <span className="site-signature-text">{PORTFOLIO_DATA.firstname} {PORTFOLIO_DATA.lastname}</span>
       </a>
       <ReactorDock />
+      <svg className="nav-circuits" viewBox="0 0 220 160" aria-hidden="true"><path d="M0 24H70L90 12H210 M0 24H55L90 50H210 M0 24H40L90 90H210 M0 24H25L90 130H210" /></svg>
       <div className="site-availability"><span className="availability-dot" aria-hidden="true" /><span>available now for work</span></div>
       <nav className="site-nav" aria-label="Main navigation">
         {SECTIONS.map(([id, label]) => (

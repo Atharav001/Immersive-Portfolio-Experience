@@ -774,6 +774,21 @@ img, video, canvas { max-width: 100%; }
 .work-head h2 em { display: block; font-family: 'ClashDisplay',sans-serif; font-weight: 400; line-height: .98; }
 
 /* Transparent GPU overlay: the page underneath remains fully interactive. */
+.work-slide-stage .work-section { position: relative !important; transform: translate(var(--work-shift,100vw),var(--work-pin,0px)); }
+.nav-circuits { position: absolute; right: 4vw; top: 28px; width: clamp(150px,17vw,220px); height: 160px; pointer-events: none; opacity: 0; }
+.nav-circuits path { fill: none; stroke: #89eaff; stroke-width: 1; stroke-dasharray: 12 90; filter: drop-shadow(0 0 4px #64dbff); }
+.reactor-powered .nav-circuits, .reactor-discharge .nav-circuits { animation: circuit-visible 1.4s ease both; }
+.reactor-powered .nav-circuits path { animation: circuit-flow 1.4s linear reverse; }
+.reactor-discharge .nav-circuits path { animation: circuit-flow 1.4s linear; }
+.reactor-powered .site-nav a { opacity: .65; }
+.reactor-powered .reactor-dock { animation: reactor-mobile-breathe 2.6s ease-in-out infinite; }
+.site-nav a { transition: opacity .7s, color .3s, transform .3s; }
+@keyframes circuit-flow { to { stroke-dashoffset: -306; } }
+@keyframes circuit-visible { 0%,100% { opacity: 0; } 20%,70% { opacity: .8; } }
+.project-tile { background: linear-gradient(145deg,#202332,#0c141b); }
+.project-tile:hover .project-visual-wash { background: linear-gradient(135deg,#8c74ff25,#61e7ff25); }
+.project-tile:hover .project-open { color: #071015; background: #b5f2ff; box-shadow: 0 0 25px #76dfff55; }
+@media(max-width:700px), (prefers-reduced-motion:reduce) { .nav-circuits { display:none; } }
 .work-slide-stage { position: relative; margin-top: -100svh; padding-bottom: 100svh; pointer-events: none; }
 .story-scroll-stage { height: 640svh; }
 .contact-intro { max-width: 48ch; margin: 0 0 28px; color: #b6b7c0; font-size: clamp(16px,1.5vw,21px); line-height: 1.7; }

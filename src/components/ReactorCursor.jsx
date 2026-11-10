@@ -12,6 +12,16 @@ export default function ReactorCursor() {
     let x = 0;
     let y = 0;
     let initialized = false;
+    let followFrame = 0;
+    let targetX = 0, targetY = 0;
+    let departure = 0;
+    const header = document.querySelector('.site-header');
+    const follow = (now) => {
+      const flying = now - departure < 650;
+      const ease = flying ? 0.075 : 0.25;
+      setPose(x + (targetX - x) * ease, y + (targetY - y) * ease, flying ? 180 + 180 * clamp01((now - departure) / 650) : 360);
+      followFrame = Math.hypot(targetX-x,targetY-y) > .1 || flying ? requestAnimationFrame(follow) : 0;
+    };
     const setPose = (nextX, nextY, angle) => {
       x = nextX;
       y = nextY;
@@ -25,14 +35,25 @@ export default function ReactorCursor() {
     };
     const move = (event) => {
       cancelAnimationFrame(returnFrame);
+      if (cursor.classList.contains('is-docked') || cursor.classList.contains('is-returning')) {
+        departure = performance.now();
+        header?.classList.remove('reactor-powered');
+        header?.classList.add('reactor-discharge');
+      }
       cursor.classList.remove('is-docked', 'is-returning');
       anchor.classList.remove('reactor-arrival');
-      setPose(event.clientX, event.clientY, 0);
+      targetX = event.clientX;
+      targetY = event.clientY;
+      if (!followFrame) followFrame = requestAnimationFrame(follow);
       initialized = true;
     };
     const returnHome = (event) => {
       if (!initialized || cursor.classList.contains('is-returning')) return;
       cancelAnimationFrame(returnFrame);
+      cancelAnimationFrame(followFrame);
+      followFrame = 0;
+      header?.classList.remove('reactor-discharge');
+      header?.classList.add('reactor-powered');
       const start = { x: Number.isFinite(event?.clientX) ? event.clientX : x, y: Number.isFinite(event?.clientY) ? event.clientY : y };
       const end = dockCenter();
       const control = { x: start.x + (end.x - start.x) * 0.55, y: Math.max(18, Math.min(start.y, end.y) - Math.min(160, innerHeight * 0.18)) };
@@ -73,6 +94,7 @@ export default function ReactorCursor() {
     window.addEventListener('resize', resize);
     return () => {
       cancelAnimationFrame(returnFrame);
+      cancelAnimationFrame(followFrame);
       window.removeEventListener('pointermove', move);
       document.documentElement.removeEventListener('pointerleave', returnHome);
       window.removeEventListener('blur', returnHome);

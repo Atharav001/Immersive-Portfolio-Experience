@@ -16,6 +16,7 @@ export default function WorkSection() {
         const progress = Math.min(1, Math.max(0, -rect.top / window.innerHeight));
         node.style.setProperty('--work-clip', '0%');
         node.style.setProperty('--work-shift', `${(1 - progress) * 100}vw`);
+        node.style.setProperty('--work-pin', `${Math.min(window.innerHeight, Math.max(0, -rect.top))}px`);
         const film = document.querySelector('.story-sticky');
         if (film) film.style.transform = `translate(${-progress * 100}vw, ${progress * window.innerHeight}px)`;
         node.classList.toggle('is-visible', progress > 0.12);
