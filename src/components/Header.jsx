@@ -11,6 +11,29 @@ const SECTIONS = [
 
 export default function Header() {
   const [active, setActive] = useState('home');
+  const [circuits, setCircuits] = useState([]);
+  useEffect(() => {
+    const measure = () => {
+      const header = document.querySelector('.site-header');
+      const dock = header?.querySelector('.reactor-dock');
+      if (!dock) return;
+      const bounds = header.getBoundingClientRect();
+      const reactor = dock.getBoundingClientRect();
+      const endX = reactor.left + reactor.width / 2 - bounds.left;
+      const endY = reactor.top + reactor.height / 2 - bounds.top;
+      setCircuits([...header.querySelectorAll('.site-nav a')].map((link, index) => {
+        const box = link.getBoundingClientRect();
+        const x = box.left - bounds.left - 12;
+        const y = box.top + box.height / 2 - bounds.top;
+        const lane = endX + reactor.width / 2 + 14 + index * 9;
+        return `M ${endX} ${endY} H ${lane} V ${y - 8} L ${lane + 8} ${y} H ${x}`;
+      }));
+    };
+    measure();
+    document.fonts?.ready.then(measure);
+    window.addEventListener('resize', measure);
+    return () => window.removeEventListener('resize', measure);
+  }, []);
   useEffect(() => {
     let frame = 0;
     const updateActive = () => {
@@ -43,7 +66,7 @@ export default function Header() {
         <span className="site-signature-text">{PORTFOLIO_DATA.firstname} {PORTFOLIO_DATA.lastname}</span>
       </a>
       <ReactorDock />
-      <svg className="nav-circuits" viewBox="0 0 220 160" aria-hidden="true"><path d="M0 24H70L90 12H210 M0 24H55L90 50H210 M0 24H40L90 90H210 M0 24H25L90 130H210" /></svg>
+      <svg className="nav-circuits" aria-hidden="true">{circuits.map((path, index) => <g key={index} style={{ '--circuit-delay': `${index * 70}ms` }}><path className="circuit-track" d={path} /><path className="circuit-pulse" pathLength="100" d={path} /></g>)}</svg>
       <div className="site-availability"><span className="availability-dot" aria-hidden="true" /><span>available now for work</span></div>
       <nav className="site-nav" aria-label="Main navigation">
         {SECTIONS.map(([id, label]) => (
