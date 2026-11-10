@@ -6,7 +6,7 @@ export const PORTFOLIO_DATA = {
   city: "Bengaluru",
   location: "India",
   availability: "Available for work",
-  email: "atharavnarang@gmail.com",
+  email: "atharavnarang05@gmail.com",
   github: "https://github.com/Atharav001",
   about: "I’m a computer science student based in Bengaluru, India, building expressive and responsive digital experiences. I’m interested in frontend engineering, interactive 3D, and motion design, and I’m exploring those ideas through this portfolio.",
   services: [

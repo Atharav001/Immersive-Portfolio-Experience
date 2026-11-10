@@ -31,6 +31,13 @@ export default function StorySection({ src = '/media/life-story.mp4' }) {
         section.style.setProperty('--film-reveal', reveal.toFixed(4));
         if (!Number.isFinite(video.duration)) return;
         const progress = Math.min(1, Math.max(0, -rect.top / (section.offsetHeight - innerHeight)));
+        section.querySelectorAll('.story-chapter').forEach((chapter, index) => {
+          const center = 0.16 + index * 0.25;
+          const visibility = Math.max(0, Math.min(1, (0.14 - Math.abs(progress - center)) / 0.055));
+          chapter.style.opacity = visibility;
+          chapter.style.transform = `translateY(${(1 - visibility) * 18}px)`;
+          chapter.setAttribute('aria-hidden', visibility < 0.1 ? 'true' : 'false');
+        });
         const filmProgress = Math.min(1, progress / 0.78);
         targetTime = mapTimeline(filmProgress, video.duration);
         seek();
@@ -59,7 +66,11 @@ export default function StorySection({ src = '/media/life-story.mp4' }) {
     <section id="origin-story" ref={sectionRef} className="story-scroll-stage" aria-label="Life story film">
       <div className={`story-sticky${src ? ' has-film' : ''}`}>
         {src ? <video ref={videoRef} className="story-film" src={src} poster="/media/life-story-poster.jpg" muted playsInline preload="auto" aria-label="Scroll-controlled life story film" /> : null}
-        <div className="story-caption"><span className="story-index">A LIFE IN FRAMES</span><p>The story unfolds<br />one moment at a time.</p></div>
+        <div className="story-chapters">
+          <article className="story-chapter"><span>ABOUT ME</span><h2>Curiosity comes first.</h2><p>I’m Atharav, a computer science student in Bengaluru. I like understanding how things work — then building something of my own.</p></article>
+          <article className="story-chapter"><span>WHAT I BUILD</span><h2>Ideas I can put to work.</h2><p>From tools that remember your browser tabs to research assistants and mindful scrolling apps, I explore problems through working projects.</p></article>
+          <article className="story-chapter"><span>WHAT’S NEXT</span><h2>More to learn.<br />More to make.</h2><p>I’m exploring applied AI, frontend engineering, and interactive experiences. I’m open to collaborating with people who enjoy making useful things.</p></article>
+        </div>
         <div className="story-scroll-cue"><span>SCROLL TO MOVE THROUGH THE STORY</span><i /></div>
       </div>
     </section>

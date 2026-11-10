@@ -73,7 +73,7 @@ export default function Header() {
   }, []);
 
   return (
-    <header className="site-header">
+    <header className={`site-header${active === 'home' ? '' : ' is-off-home'}`}>
       <a href="#home" className="site-signature" aria-label={`${PORTFOLIO_DATA.firstname} ${PORTFOLIO_DATA.lastname}`}>
         <span className="site-signature-text">{PORTFOLIO_DATA.firstname} {PORTFOLIO_DATA.lastname}</span>
       </a>
