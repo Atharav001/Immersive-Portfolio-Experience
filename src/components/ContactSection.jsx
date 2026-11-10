@@ -8,11 +8,12 @@ export default function ContactSection({ email = PORTFOLIO_DATA.email }) {
     <footer id="contact" className="contact-panel">
       <div className="contact-inner">
         <div className="contact-cta-row">
-          <p className="contact-kicker">Have an idea or a project?</p>
+          <p className="contact-kicker">Got something in mind? I’d love to hear it.</p>
           <LiquidText as="a" intensity={28} className="contact-cta" href={`mailto:${email}`}>
-            <span>Let’s build something.</span>
+            <span>Come say hello.</span>
             <ArrowUpRight aria-hidden="true" strokeWidth={1.25} />
           </LiquidText>
+          <p className="contact-intro">A project, a collaboration, or just a good conversation — my inbox is open. Tell me what you’re thinking. We’ll take it from there.</p>
           <LiquidText as="a" intensity={18} className="contact-email" href={`mailto:${email}`}>
             {email}
           </LiquidText>
@@ -32,7 +33,7 @@ export default function ContactSection({ email = PORTFOLIO_DATA.email }) {
             <a href={`mailto:${email}`}>{email}</a>
           </div>
           <div>
-            <h3>Elsewhere</h3>
+            <h3>Find me online</h3>
             {PORTFOLIO_DATA.socials.map((social) => (
               <a key={social.name} href={social.url} target="_blank" rel="noreferrer">
                 {social.name} ↗

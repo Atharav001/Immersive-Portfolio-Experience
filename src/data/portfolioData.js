@@ -80,6 +80,7 @@ export const PORTFOLIO_DATA = {
     },
   ],
   socials: [
+    { name: "Portfolio 3.0", url: "https://atharav001n.vercel.app" },
     {
       name: "GitHub",
       url: "https://github.com/Atharav001",

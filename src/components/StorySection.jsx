@@ -7,12 +7,16 @@ export default function StorySection({ src = '/media/life-story.mp4' }) {
   useEffect(() => {
     if (!src) return undefined;
     let frame = 0;
+    let targetTime = 0.6;
+    const seek = () => {
+      const video = videoRef.current;
+      if (!video || video.seeking || video.readyState < 2) return;
+      if (Math.abs(video.currentTime - targetTime) > 0.02) video.currentTime = targetTime;
+    };
     const mapTimeline = (progress, duration) => {
       const visibleStart = Math.min(0.6, duration * 0.06);
       const visibleEnd = Math.max(visibleStart, duration - 0.04);
-      if (progress <= 0.36) return visibleStart + (3.9 - visibleStart) * (progress / 0.36);
-      if (progress <= 0.68) return 4.06 + (6.94 - 4.06) * ((progress - 0.36) / 0.32);
-      return 7.06 + (visibleEnd - 7.06) * ((progress - 0.68) / 0.32);
+      return visibleStart + (visibleEnd - visibleStart) * progress;
     };
     const scrub = () => {
       cancelAnimationFrame(frame);
@@ -24,8 +28,8 @@ export default function StorySection({ src = '/media/life-story.mp4' }) {
         const rect = section.getBoundingClientRect();
         const progress = Math.min(1, Math.max(0, -rect.top / (section.offsetHeight - innerHeight)));
         const filmProgress = Math.min(1, progress / 0.78);
-        const targetTime = mapTimeline(filmProgress, video.duration);
-        if (Math.abs(video.currentTime - targetTime) > 0.025) video.currentTime = targetTime;
+        targetTime = mapTimeline(filmProgress, video.duration);
+        seek();
       });
     };
     const ready = () => scrub();
@@ -34,6 +38,7 @@ export default function StorySection({ src = '/media/life-story.mp4' }) {
     const video = videoRef.current;
     video?.addEventListener('loadedmetadata', ready);
     video?.addEventListener('loadeddata', ready);
+    video?.addEventListener('seeked', seek);
     if (video?.readyState >= 1) ready();
     return () => {
       cancelAnimationFrame(frame);
@@ -41,6 +46,7 @@ export default function StorySection({ src = '/media/life-story.mp4' }) {
       window.removeEventListener('resize', scrub);
       video?.removeEventListener('loadedmetadata', ready);
       video?.removeEventListener('loadeddata', ready);
+      video?.removeEventListener('seeked', seek);
     };
   }, [src]);
 

@@ -17,7 +17,7 @@ export default function App() {
       {showLoader && <CapsuleLoader brandTitle={`${PORTFOLIO_DATA.firstname.toUpperCase()} ${PORTFOLIO_DATA.lastname.toUpperCase()} / ${PORTFOLIO_DATA.jobTitle.toUpperCase()}`} onFinish={() => setShowLoader(false)} />}
       <Header />
       <main id="home" className="relative z-10 w-full"><HeroSection /></main>
-      <StorySection src="/media/life-story.mp4" />
+      <StorySection src="/media/life-story-scrub.mp4" />
       <WorkSection />
       <ContactSection email={PORTFOLIO_DATA.email} />
       <ReactorCursor />

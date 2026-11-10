@@ -12,10 +12,12 @@ export default function WorkSection() {
     const updateReveal = () => {
       cancelAnimationFrame(frame);
       frame = requestAnimationFrame(() => {
-        const rect = node.getBoundingClientRect();
-        const progress = Math.min(1, Math.max(0, (window.innerHeight - rect.top) / (window.innerHeight * 0.72)));
-        node.style.setProperty('--work-clip', `${(1 - progress) * 100}%`);
-        node.style.setProperty('--work-shift', `${(1 - progress) * -6}vw`);
+        const rect = node.parentElement.getBoundingClientRect();
+        const progress = Math.min(1, Math.max(0, -rect.top / window.innerHeight));
+        node.style.setProperty('--work-clip', '0%');
+        node.style.setProperty('--work-shift', `${(1 - progress) * 100}vw`);
+        const film = document.querySelector('.story-sticky');
+        if (film) film.style.transform = `translate(${-progress * 100}vw, ${progress * window.innerHeight}px)`;
         node.classList.toggle('is-visible', progress > 0.12);
       });
     };
@@ -39,7 +41,7 @@ export default function WorkSection() {
   }, [selected]);
   const projects = PORTFOLIO_DATA.work;
   return (
-    <section ref={sectionRef} id="work" className="work-section">
+    <div className="work-slide-stage"><section ref={sectionRef} id="work" className="work-section">
       <div className="work-head"><div><span className="section-eyebrow"><i /> SELECTED WORK / 2025—26</span><h2>Built with<br /><em>intention.</em></h2></div><p>A few things I’ve been making.<br />More stories are on the way.</p></div>
       <div className="project-bento">
         {projects.map((project, index) => (
@@ -56,6 +58,6 @@ export default function WorkSection() {
           <div className="case-study-content"><span className="section-eyebrow"><i /> CASE STUDY</span><h2 id="case-study-title">{selected.title}</h2><p className="case-study-lead">{selected.description}</p><div className="case-study-columns"><div><h3>THE APPROACH</h3><p>{selected.caseStudy}</p></div><div><h3>BUILT WITH</h3><div className="case-study-tags">{selected.technologies.map((tech) => <span key={tech}>{tech}</span>)}</div></div></div><a className="case-study-link" href={selected.link} target="_blank" rel="noreferrer">View GitHub repo <ArrowDownRight size={18} /></a></div>
         </article>
       </div>}
-    </section>
+    </section></div>
   );
 }

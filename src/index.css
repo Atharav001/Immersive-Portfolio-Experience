@@ -774,6 +774,14 @@ img, video, canvas { max-width: 100%; }
 .work-head h2 em { display: block; font-family: 'ClashDisplay',sans-serif; font-weight: 400; line-height: .98; }
 
 /* Transparent GPU overlay: the page underneath remains fully interactive. */
+.work-slide-stage { position: relative; margin-top: -100svh; padding-bottom: 100svh; pointer-events: none; }
+.story-scroll-stage { height: 640svh; }
+.contact-intro { max-width: 48ch; margin: 0 0 28px; color: #b6b7c0; font-size: clamp(16px,1.5vw,21px); line-height: 1.7; }
+.contact-meta-grid a { overflow-wrap: anywhere; }
+.work-slide-stage .work-section { align-self: start; }
+.work-slide-stage .work-section { position: sticky; top: 0; pointer-events: auto; min-height: 100svh; transition: none; border-radius: 0; clip-path: none; }
+.story-sticky { will-change: transform; }
+.work-slide-stage .work-section.is-visible .project-tile:hover { transform: translateY(-6px); border-color: #bcefff80; }
 /* Shared rhythm and interaction finishes. */
 .home-hero { background: radial-gradient(ellipse 70% 55% at 50% 15%, #201630 0%, #100e19 48%, #030809 100%); }
 .wordmark-word { gap: .035em; }
