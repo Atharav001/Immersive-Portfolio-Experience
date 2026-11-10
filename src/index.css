@@ -774,6 +774,9 @@ img, video, canvas { max-width: 100%; }
 .work-head h2 em { display: block; font-family: 'ClashDisplay',sans-serif; font-weight: 400; line-height: .98; }
 
 /* Transparent GPU overlay: the page underneath remains fully interactive. */
+.portfolio-shell .work-slide-stage { padding-bottom: 0; }
+.work-slide-viewport { position: sticky; top: 0; height: 100vh; overflow: clip; pointer-events: none; }
+.portfolio-shell .work-slide-viewport .work-section { position: relative; top: auto; transform: translate3d(var(--work-shift,100vw),var(--work-content-y,0px),0); transition: none; pointer-events: auto; }
 /* The reactor remains above the ambient dimmer while docked. */
 body::after { content: ''; position: fixed; inset: 0; z-index: 49; background: #02060c; opacity: 0; pointer-events: none; transition: opacity 900ms cubic-bezier(.22,1,.36,1); }
 body:has(.reactor-cursor.is-docked)::after { opacity: .14; }
