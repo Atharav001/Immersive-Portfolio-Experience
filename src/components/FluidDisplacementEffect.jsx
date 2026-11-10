@@ -73,7 +73,7 @@ const contentFragment = `
     vec2 direction = normalize(flow + vec2(0.00001, 0.00001));
     vec2 baseUv = (vUv - 0.5) * uUvScale + 0.5;
     float irregularity = 0.94 + 0.06 * sin(vUv.y * 12.0 + uSeed);
-    float pull = strength * irregularity * (uIsImage > 0.5 ? 24.0 : 42.0);
+    float pull = strength * irregularity * (uIsImage > 0.5 ? 24.0 : 54.0);
     vec2 crossFlow = vec2(-direction.y, direction.x);
     vec2 elasticCurl = crossFlow * sin(vUv.y * 12.0 + uSeed) * strength * 2.0;
     vec2 draggedUv = baseUv + (-direction * pull + elasticCurl) / uPlanePixels;
@@ -329,7 +329,7 @@ export default function FluidDisplacementEffect() {
       lastEventTime = performance.now();
       previous.copy(pointer);
       pointer.copy(next);
-      strength = Math.min(0.92, 0.18 + speed * 0.42);
+      strength = Math.min(0.98, 0.25 + speed * 0.56);
       stampPending = true;
       schedule(1450);
     };

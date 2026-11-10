@@ -18,7 +18,7 @@ export default function ReactorCursor() {
     const header = document.querySelector('.site-header');
     const follow = (now) => {
       const flying = now - departure < 650;
-      const ease = flying ? 0.075 : 0.25;
+      const ease = flying ? 0.12 : 0.52;
       setPose(x + (targetX - x) * ease, y + (targetY - y) * ease, flying ? 180 + 180 * clamp01((now - departure) / 650) : 360);
       followFrame = Math.hypot(targetX-x,targetY-y) > .1 || flying ? requestAnimationFrame(follow) : 0;
     };

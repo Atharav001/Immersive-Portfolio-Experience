@@ -14,11 +14,12 @@ export default function WorkSection() {
       frame = requestAnimationFrame(() => {
         const rect = node.parentElement.getBoundingClientRect();
         const progress = Math.min(1, Math.max(0, -rect.top / window.innerHeight));
+        const slide = progress * progress * (3 - 2 * progress);
         node.style.setProperty('--work-clip', '0%');
-        node.style.setProperty('--work-shift', `${(1 - progress) * 100}vw`);
+        node.style.setProperty('--work-shift', `${(1 - slide) * 100}vw`);
         node.style.setProperty('--work-pin', `${Math.min(window.innerHeight, Math.max(0, -rect.top))}px`);
         const film = document.querySelector('.story-sticky');
-        if (film) film.style.transform = `translate(${-progress * 100}vw, ${progress * window.innerHeight}px)`;
+        if (film) film.style.transform = `translate(${-slide * 100}vw, ${progress * window.innerHeight}px)`;
         node.classList.toggle('is-visible', progress > 0.12);
       });
     };
@@ -43,11 +44,11 @@ export default function WorkSection() {
   const projects = PORTFOLIO_DATA.work;
   return (
     <div className="work-slide-stage"><section ref={sectionRef} id="work" className="work-section">
-      <div className="work-head"><div><span className="section-eyebrow"><i /> SELECTED WORK / 2025—26</span><h2>Built with<br /><em>intention.</em></h2></div><p>A few things I’ve been making.<br />More stories are on the way.</p></div>
+      <div className="work-head"><div><span className="section-eyebrow">PROJECTS</span><h2>Things I’ve<br /><em>built.</em></h2></div><p>Browser tools, applied AI, and experiments.<br />Pick a project to see how it works.</p></div>
       <div className="project-bento">
         {projects.map((project, index) => (
           <button key={project.id} type="button" className={`project-tile project-tile-${index + 1}`} onClick={() => setSelected(project)} aria-label={`Open case study: ${project.title}`}>
-            <div className="project-visual" style={{ '--project-accent': project.color }}><img src={project.banner} alt="" loading="lazy" data-fluid-image /><span className="project-visual-wash" /><span className="project-index">0{index + 1}</span><span className="project-open"><ArrowUpRight size={19} /></span><span className="project-visual-label">{project.category}</span></div>
+            <div className="project-visual" style={{ '--project-accent': project.color }}><img src={project.banner} alt="" loading="lazy" /><span className="project-visual-wash" /><span className="project-open"><ArrowUpRight size={19} /></span><span className="project-visual-label">{project.category}</span></div>
             <div className="project-card-copy"><div><h3>{project.title}</h3><p>{project.tagline}</p></div><span className="project-year">{project.year}</span></div>
           </button>
         ))}
