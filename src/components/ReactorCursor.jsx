@@ -38,7 +38,7 @@ export default function ReactorCursor() {
       if (cursor.classList.contains('is-docked') || cursor.classList.contains('is-returning')) {
         departure = performance.now();
         header?.classList.remove('reactor-powered');
-        header?.classList.add('reactor-discharge');
+        if (cursor.classList.contains('is-docked')) header?.classList.add('reactor-discharge');
       }
       cursor.classList.remove('is-docked', 'is-returning');
       anchor.classList.remove('reactor-arrival');
@@ -48,12 +48,11 @@ export default function ReactorCursor() {
       initialized = true;
     };
     const returnHome = (event) => {
-      if (!initialized || cursor.classList.contains('is-returning')) return;
+      if (!initialized || cursor.classList.contains('is-returning') || cursor.classList.contains('is-docked')) return;
       cancelAnimationFrame(returnFrame);
       cancelAnimationFrame(followFrame);
       followFrame = 0;
       header?.classList.remove('reactor-discharge');
-      header?.classList.add('reactor-powered');
       const start = { x: Number.isFinite(event?.clientX) ? event.clientX : x, y: Number.isFinite(event?.clientY) ? event.clientY : y };
       const end = dockCenter();
       const control = { x: start.x + (end.x - start.x) * 0.55, y: Math.max(18, Math.min(start.y, end.y) - Math.min(160, innerHeight * 0.18)) };
@@ -74,6 +73,7 @@ export default function ReactorCursor() {
         else {
           cursor.classList.remove('is-returning');
           cursor.classList.add('is-docked');
+          header?.classList.add('reactor-powered');
           anchor.classList.add('reactor-arrival');
           window.setTimeout(() => anchor.classList.remove('reactor-arrival'), 1300);
         }
