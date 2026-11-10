@@ -25,8 +25,16 @@ export default function Header() {
         const box = link.getBoundingClientRect();
         const x = box.left - bounds.left - 12;
         const y = box.top + box.height / 2 - bounds.top;
-        const lane = endX + reactor.width / 2 + 14 + index * 9;
-        return `M ${endX} ${endY} H ${lane} V ${y - 8} L ${lane + 8} ${y} H ${x}`;
+        // Separate ports on the reactor; outer lanes serve the upper labels.
+        // Lower routes turn earlier, so their vertical runs cannot cross the
+        // horizontal runs above them.
+        const portY = endY - 15 + index * 10;
+        const portX = endX + Math.sqrt(Math.max(0, (reactor.width / 2) ** 2 - (portY - endY) ** 2));
+        const available = Math.max(16, x - portX);
+        const lane = portX + available * (0.82 - index * 0.18);
+        const bend = Math.min(5, Math.abs(y - portY) / 2, available * .08);
+        const sign = y >= portY ? 1 : -1;
+        return `M ${portX} ${portY} H ${lane - bend} L ${lane} ${portY + sign * bend} V ${y - sign * bend} L ${lane + bend} ${y} H ${x}`;
       }));
     };
     measure();
