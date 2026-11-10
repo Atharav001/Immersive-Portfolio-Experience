@@ -30,9 +30,13 @@ export default function Header() {
       }));
     };
     measure();
+    const timer = window.setTimeout(measure, 500);
+    const observer = new ResizeObserver(measure);
+    const header = document.querySelector('.site-header');
+    if (header) observer.observe(header);
     document.fonts?.ready.then(measure);
     window.addEventListener('resize', measure);
-    return () => window.removeEventListener('resize', measure);
+    return () => { window.clearTimeout(timer); observer.disconnect(); window.removeEventListener('resize', measure); };
   }, []);
   useEffect(() => {
     let frame = 0;
