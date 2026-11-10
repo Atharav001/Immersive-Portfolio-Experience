@@ -24,8 +24,12 @@ export default function StorySection({ src = '/media/life-story.mp4' }) {
         frame = 0;
         const section = sectionRef.current;
         const video = videoRef.current;
-        if (!section || !video || !Number.isFinite(video.duration)) return;
+        if (!section || !video) return;
         const rect = section.getBoundingClientRect();
+        const entrance = Math.min(1, Math.max(0, (innerHeight - rect.top) / (innerHeight * 1.65)));
+        const reveal = entrance * entrance * (3 - 2 * entrance);
+        section.style.setProperty('--film-reveal', reveal.toFixed(4));
+        if (!Number.isFinite(video.duration)) return;
         const progress = Math.min(1, Math.max(0, -rect.top / (section.offsetHeight - innerHeight)));
         const filmProgress = Math.min(1, progress / 0.78);
         targetTime = mapTimeline(filmProgress, video.duration);
@@ -36,6 +40,7 @@ export default function StorySection({ src = '/media/life-story.mp4' }) {
     window.addEventListener('scroll', scrub, { passive: true });
     window.addEventListener('resize', scrub);
     const video = videoRef.current;
+    scrub();
     video?.addEventListener('loadedmetadata', ready);
     video?.addEventListener('loadeddata', ready);
     video?.addEventListener('seeked', seek);

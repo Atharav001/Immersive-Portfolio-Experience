@@ -774,6 +774,10 @@ img, video, canvas { max-width: 100%; }
 .work-head h2 em { display: block; font-family: 'ClashDisplay',sans-serif; font-weight: 400; line-height: .98; }
 
 /* Transparent GPU overlay: the page underneath remains fully interactive. */
+.story-scroll-stage { --film-reveal: 0; background: #030809; }
+.story-scroll-stage .story-sticky { background: #030809; }
+.story-scroll-stage .story-film { opacity: var(--film-reveal); }
+.story-scroll-stage .story-sticky::after { content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(180deg,#030809 0%,#03080900 48%),radial-gradient(ellipse at 50% 45%,transparent 25%,#030809 100%); opacity: calc(1 - var(--film-reveal)); }
 .portfolio-shell .work-slide-stage { padding-bottom: 0; }
 .work-slide-viewport { position: sticky; top: 0; height: 100vh; overflow: clip; pointer-events: none; }
 .portfolio-shell .work-slide-viewport .work-section { position: relative; top: auto; transform: translate3d(var(--work-shift,100vw),var(--work-content-y,0px),0); transition: none; pointer-events: auto; }
